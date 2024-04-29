@@ -6,7 +6,7 @@ namespace Qsomazzi\Particle\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('widget', template: '@Qsomazzi/Particle/components/widget.html.twig')]
+#[AsTwigComponent('widget', template: '@Qsomazzi/components/widget.html.twig')]
 class Widget
 {
     public string $title;

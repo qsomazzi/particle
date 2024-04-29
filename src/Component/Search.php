@@ -6,7 +6,7 @@ namespace Qsomazzi\Particle\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('search', template: '@Qsomazzi/Particle/components/search.html.twig')]
+#[AsTwigComponent('search', template: '@Qsomazzi/components/search.html.twig')]
 final class Search
 {
 }

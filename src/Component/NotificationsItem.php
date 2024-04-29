@@ -7,7 +7,7 @@ namespace Qsomazzi\Particle\Component;
 use Qsomazzi\Particle\Model\Notification;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('notificationsItem', template: '@Qsomazzi/Particle/components/notificationsItem.html.twig')]
+#[AsTwigComponent('notificationsItem', template: '@Qsomazzi/components/notificationsItem.html.twig')]
 final class NotificationsItem
 {
     public Notification $notification;

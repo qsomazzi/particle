@@ -7,7 +7,7 @@ namespace Qsomazzi\Particle\Component\Widget;
 use Qsomazzi\Particle\Component\Widget;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('widget:withBarChart', template: '@Qsomazzi/Particle/components/widget/withBarChart.html.twig')]
+#[AsTwigComponent('widget:withBarChart', template: '@Qsomazzi/components/widget/withBarChart.html.twig')]
 final class WithBarChart extends Widget
 {
     public array $labels = [];
