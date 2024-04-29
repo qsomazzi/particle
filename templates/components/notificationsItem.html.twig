@@ -1,0 +1,20 @@
+<div class="list-group-item">
+    <div class="row align-items-center">
+        <div class="col-auto"><span class="status-dot status-dot-animated bg-{{ this.notification.color }} d-block"></span></div>
+        <div class="col text-truncate">
+            {% if this.notification.link is not empty %}
+                <a href="{{ this.notification.link }}" class="text-body d-block">{{ this.notification.title }}</a>
+            {% else %}
+                <span class="text-body d-block">{{ this.notification.title }}</span>
+            {% endif %}
+            <div class="d-block text-secondary text-truncate mt-n1">
+                {{ this.notification.description }}
+            </div>
+        </div>
+        <div class="col-auto">
+            <a href="#remove" class="list-group-item-actions">
+                <i class="ti ti-trash"></i>
+            </a>
+        </div>
+    </div>
+</div>

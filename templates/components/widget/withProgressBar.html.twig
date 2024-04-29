@@ -1,0 +1,24 @@
+{% extends 'components/widget.html.twig' %}
+
+{% block trending %}{% endblock %}
+{% block progressBar %}
+    <div class="d-flex mb-2">
+        <div class="ms-auto">
+            {% if this.trending is not null %}
+                <span class="text-{{ this.trendingColor }} d-inline-flex align-items-center lh-1">
+                    {{ this.trending }}{{ this.trendingUnit }} <i class="ti ti-{{ this.trendingIcon }}"></i>
+                </span>
+            {% else %}
+                <span class="d-inline-flex"></span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="progress progress-sm">
+        <div class="progress-bar bg-primary" style="width: {{ this.progress }}%" role="progressbar" aria-valuenow="{{ this.progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ this.progress }}% Complete">
+            <span class="visually-hidden">{{ this.progress }}% Complete</span>
+        </div>
+    </div>
+{% endblock %}
+
+
+

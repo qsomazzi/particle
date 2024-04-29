@@ -1,0 +1,28 @@
+<div class="d-none d-md-flex">
+    <div class="nav-item dropdown d-none d-md-flex me-3">
+        <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications" aria-expanded="false">
+            <i class="ti ti-bell"></i>
+            {% if this.notifications|length > 0 %}<span class="badge bg-red"></span>{% endif %}
+        </a>
+        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Last updates</h3>
+                </div>
+                <div class="list-group list-group-flush list-group-hoverable">
+                    {% for notification in this.notifications %}
+                        <twig:notificationsItem notification="{{ notification }}" />
+                    {% else %}
+                        <div class="list-group-item">
+                            <div class="row align-items-center">
+                                <div class="col text-truncate">
+                                    <span class="text-body d-block">No updates</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

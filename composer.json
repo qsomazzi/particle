@@ -1,0 +1,35 @@
+{
+    "name": "qsomazzi/particle",
+    "description": "Particle is a versatile Symfony Bundle that provides a collection of Twig components based on the free templates from Tabler.",
+    "type": "symfony-bundle",
+    "require": {
+        "php": ">=8.2",
+        "symfony/ux-twig-component": "^2.17",
+        "symfony/http-foundation": "6.4",
+        "symfony/config": "^6.4",
+        "symfony/http-kernel": "6.4"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.54",
+        "phpstan/phpstan": "^1.10",
+        "pestphp/pest": "^2.34"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Qsomazzi\\Particle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Quentin SOMAZZI",
+            "email": "qsomazzi@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

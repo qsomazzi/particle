@@ -1,0 +1,62 @@
+{% extends 'components/widget.html.twig' %}
+
+{% block chart %}
+    {% set id = this.blockId %}
+
+    <div id="{{ id }}" class="chart-sm"></div>
+
+    <script type="module">
+        import ApexCharts from 'apexcharts';
+
+        document.addEventListener("DOMContentLoaded", function () {
+            (new ApexCharts(document.getElementById('{{ id }}'), {
+                chart: {
+                    type: "line",
+                    fontFamily: 'inherit',
+                    height: 40.0,
+                    sparkline: {
+                        enabled: true
+                    },
+                    animations: {
+                        enabled: false
+                    },
+                },
+                fill: {
+                    opacity: 1,
+                },
+                stroke: {
+                    width: 1,
+                    dashArray: 3,
+                    lineCap: "round",
+                    curve: "smooth",
+                },
+                series: {{ this.data|json_encode|raw }},
+                tooltip: {
+                    theme: 'dark'
+                },
+                grid: {
+                    strokeDashArray: 4,
+                },
+                xaxis: {
+                    labels: {
+                        padding: 0,
+                    },
+                    tooltip: {
+                        enabled: false
+                    },
+                    type: 'datetime',
+                },
+                yaxis: {
+                    labels: {
+                        padding: 4
+                    },
+                },
+                labels: {{ this.labels|json_encode|raw }},
+                colors: [tabler.getColor("primary"), tabler.getColor("gray-600")],
+                legend: {
+                    show: false,
+                },
+            })).render();
+        });
+    </script>
+{% endblock %}
