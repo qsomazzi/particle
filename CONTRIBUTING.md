@@ -62,7 +62,3 @@ If you have an idea for a new feature or enhancement, please [open an issue](htt
 If you have any questions or need support while contributing to Particle, feel free to [open an issue](https://github.com/qsomazzi/particle/issues/new) on GitHub, and we'll be happy to assist you.
 
 Happy contributing! 🚀
-
---- 
-
-Feel free to customize this template further to include specific guidelines or procedures relevant to your project's development process.
