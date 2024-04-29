@@ -6,12 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - name: Check out repository code
         uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - name: Installation and tests launch
+      - name: Installation
         uses: php-actions/composer@v6
+      - name: echo "🚀 Launch tests."
         run: |
           php vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
           php vendor/bin/phpstan analyse
