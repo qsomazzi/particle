@@ -17,7 +17,7 @@ Particle is a versatile Symfony Bundle that provides a collection of Twig compon
 You can install Particle using [Composer](https://getcomposer.org/):
 
 ```bash
-composer require qsomazzi/particle-bundle
+composer require qsomazzi/particle
 ```
 
 ## Usage
