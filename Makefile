@@ -8,6 +8,7 @@ app-install: ## Install app dependencies (composer)
 	docker run -it --rm --name composer-particle -v "$$PWD":/particle -w /particle composer:latest install --prefer-dist
 
 app-test: ## Test app (quality and unit tests)
+	docker run -it --rm --name composer-particle -v "$$PWD":/particle -w /particle composer:latest validate
 	docker run -it --rm --name php-particle -v "$$PWD":/particle -w /particle php:8.2-cli php vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
 	docker run -it --rm --name php-particle -v "$$PWD":/particle -w /particle php:8.2-cli php vendor/bin/phpstan analyse
 	docker run -it --rm --name php-particle -v "$$PWD":/particle -w /particle php:8.2-cli php ./vendor/bin/pest

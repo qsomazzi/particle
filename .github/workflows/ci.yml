@@ -1,17 +1,26 @@
 name: CI
-run-name: ${{ github.actor }} is testing out CI 🚀
+run-name: ${{ github.actor }} has launched the CI 🚀
 on: [push]
 jobs:
-  First-Actions:
+  Setup-and-tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.2', '8.3' ]
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Installation
-        uses: php-actions/composer@v6
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+      - name: Install dependencies
+        run: composer install --prefer-dist
       - name: echo "🚀 Launch tests."
         run: |
+          composer validate
           php vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
           php vendor/bin/phpstan analyse
           php vendor/bin/pest
