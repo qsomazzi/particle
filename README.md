@@ -24,7 +24,16 @@ composer require qsomazzi/particle
 
 1. **Configuration**: Customize Particle's configuration options in your Symfony application's `config/packages/particle.yaml` file.
 
-2. **Templates**: Use Particle's Twig components in your templates to build sleek and responsive UIs effortlessly.
+2. **Twig**: Update twig configuration to add Particle's Namespace
+
+```yaml
+twig:
+    ...
+    paths:
+        '%kernel.project_dir%/vendor/qsomazzi/particle/templates': Particle
+```
+
+3. **Templates**: Use Particle's Twig components in your templates to build sleek and responsive UIs effortlessly.
 
 ```twig
 {% extends '@Particle/base.html.twig' %}
@@ -39,7 +48,7 @@ composer require qsomazzi/particle
 {% endblock %}
 ```
 
-3. **Extend and Customize**: Extend Particle's components or create your own to tailor them to your project's specific requirements.
+4. **Extend and Customize**: Extend Particle's components or create your own to tailor them to your project's specific requirements.
 
 ## Contributing
 
