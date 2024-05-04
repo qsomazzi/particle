@@ -11,8 +11,22 @@
 
 use Qsomazzi\Particle\Model\Notification;
 
-test('Model notification', function () {
+it('can be created with initial values', function () {
     $notification = new Notification('Foo');
 
     expect($notification)->toBeInstanceOf(Notification::class);
+    expect($notification->title)->toEqual('Foo');
+    expect($notification->description)->toEqual('');
+    expect($notification->link)->toEqual('');
+    expect($notification->color)->toEqual('');
+});
+
+it('can be created with more values', function () {
+    $notification = new Notification('Foo', 'Bar', '#', 'red');
+
+    expect($notification)->toBeInstanceOf(Notification::class);
+    expect($notification->title)->toEqual('Foo');
+    expect($notification->description)->toEqual('Bar');
+    expect($notification->link)->toEqual('#');
+    expect($notification->color)->toEqual('red');
 });

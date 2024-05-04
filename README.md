@@ -50,6 +50,8 @@ twig:
 
 4. **Extend and Customize**: Extend Particle's components or create your own to tailor them to your project's specific requirements.
 
+5. **Read the doc**: Read the documentation [here](docs/index.md).
+
 ## Contributing
 
 Contributions are welcome! Whether you want to report a bug, request a feature, or contribute code, please follow our [contribution guidelines](CONTRIBUTING.md).

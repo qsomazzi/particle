@@ -19,16 +19,16 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 class Alert
 {
     public string $title;
-    public string $type = 'success';
-    public ?string $icon = null;
+    public string $type         = 'success';
+    public ?string $icon        = null;
     public ?string $description = null;
-    public bool $dismissible = true;
-    public bool $important = false;
+    public bool $dismissible    = true;
+    public bool $important      = false;
 
     public function getTypeClasses(): string
     {
-        $dismissible = $this->dismissible ? ' alert-dismissible': '';
-        $important   = $this->important ? ' alert-important': '';
+        $dismissible = $this->dismissible ? ' alert-dismissible' : '';
+        $important   = $this->important ? ' alert-important' : '';
 
         return match ($this->type) {
             'success', 'warning', 'danger', 'info' => sprintf('alert alert-%s%s%s', $this->type, $dismissible, $important),

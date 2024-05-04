@@ -12,7 +12,8 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.54",
         "phpstan/phpstan": "^1.10",
-        "pestphp/pest": "^2.34"
+        "pestphp/pest": "^2.34",
+        "tomasvotruba/type-coverage": "^0.2.8"
     },
     "license": "MIT",
     "autoload": {

@@ -18,7 +18,12 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent('accordion', template: '@Particle/components/accordion.html.twig')]
 class Accordion
 {
-    private array $items;
+    public array $items = [];
+
+    public function getItems(): array
+    {
+        return $this->items;
+    }
 
     public function getBlockId(): string
     {

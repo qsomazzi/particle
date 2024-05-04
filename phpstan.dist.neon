@@ -1,8 +1,16 @@
+includes:
+    - vendor/tomasvotruba/type-coverage/config/extension.neon
+
 parameters:
     level: max
     paths:
         - config/
         - src/
+    type_coverage:
+        return: 100
+        param: 100
+        property: 100
+        declare: 100
 
     checkGenericClassInNonGenericObjectType: false
     checkMissingIterableValueType: false
