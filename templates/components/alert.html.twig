@@ -1,0 +1,20 @@
+<div class="{{ this.getTypeClasses }}" role="alert">
+    <div class="d-flex">
+        {% if this.icon is not null %}
+            <div>
+                <span class="alert-icon ti ti-{{ this.icon }}"></span>
+            </div>
+        {% endif %}
+        <div>
+            {% if this.description is not null %}
+                <h4 class="alert-title">{{ this.title }}</h4>
+                <div class="text-secondary">{{ this.description }}</div>
+            {% else %}
+                {{ this.title }}
+            {% endif %}
+        </div>
+    </div>
+    {% if this.dismissible %}
+        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    {% endif %}
+</div>
