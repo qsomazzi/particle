@@ -1,0 +1,23 @@
+{% set blockId = this.blockId %}
+
+<div {{ attributes }}>
+    {% if label is not null %}
+        <label class="form-label" for="{{ blockId }}">{{ label }}</label>
+    {% endif %}
+    <input type="text" class="form-control d-block" id="{{ blockId }}" value="{{ this.defaultColor }}" />
+</div>
+
+<script type="module">
+    import Coloris from '@melloware/coloris';
+
+    document.addEventListener("DOMContentLoaded", function () {
+        Coloris.init();
+        Coloris({
+            el:  "#{{ blockId }}",
+            selectInput: false,
+            alpha: false,
+            format: "hex",
+            swatches: {{ this.swatches|json_encode|raw }},
+        })
+    })
+</script>
