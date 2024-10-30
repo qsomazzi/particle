@@ -17,7 +17,7 @@ final class AccordionItem
 {
     public function __construct(
         public string $title,
-        public string $content
+        public string $content,
     ) {
     }
 }

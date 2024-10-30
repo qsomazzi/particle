@@ -19,7 +19,7 @@ final class Notification
         public string $title,
         public string $description = '',
         public string $link = '',
-        public string $color = ''
+        public string $color = '',
     ) {
     }
 }

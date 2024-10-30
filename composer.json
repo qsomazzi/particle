@@ -7,7 +7,14 @@
         "symfony/ux-twig-component": "^2.17",
         "symfony/http-foundation": "^6.4",
         "symfony/config": "^6.4",
-        "symfony/http-kernel": "^6.4"
+        "symfony/http-kernel": "^6.4",
+        "stof/doctrine-extensions-bundle": "^1.12",
+        "pagerfanta/twig": "^4.7",
+        "pagerfanta/doctrine-orm-adapter": "^4.7",
+        "knplabs/knp-time-bundle": "^2.4",
+        "babdev/pagerfanta-bundle": "^4.4",
+        "symfony/form": "^6.4.13",
+        "symfony/security-bundle": "^6.4.13"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.54",

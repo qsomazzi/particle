@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block headerPretitle %}{% if admin.domain is not null%}{{ admin.domain }}{% endif %}{% endblock %}
+{% block headerTitle %}{{ admin.singularLabel }}{% endblock %}
+
+{% block headerActions %}
+    <twig:button href="{{ path('admin_' ~ identifier) }}">
+        <i class="ti ti-arrow-left"></i>
+        Back to list
+    </twig:button>
+    <twig:button href="{{ path('admin_' ~ identifier ~ '_show', {'id': entity.id}) }}">
+        <i class="ti ti-eye"></i>
+        Show
+    </twig:button>
+
+    {{ include('@Particle/Action/_delete_form.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <div class="row row-deck row-cards">
+        <div class="col-12">
+            {{ include('@Particle/Action/_form.html.twig', {'button_label': 'Update'}) }}
+        </div>
+    </div>
+{% endblock %}
