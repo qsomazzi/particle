@@ -36,19 +36,26 @@ final class ListAction
         $admin      = $this->getAdmin($request->get('admin').'');
         $identifier = $request->get('identifier', $admin->getEntityClass()).'';
 
-        // define Default vars
-        $sort          = $sort ?? $admin->getDefaultSort();
-        $sortDirection = $sortDirection ?? $admin->getDefaultSortDirection();
+        list ($sort, $sortDirection) = $admin->getSort($sort, $sortDirection);
 
-        // Ensure repository is ready for the crud
         $repository = $admin->getRepository();
         if (!method_exists($repository, 'findBySearchQueryBuilder')) {
-            throw new \RuntimeException(sprintf('The repository %s must implement findBySearchQueryBuilder method', get_class($repository)));
+            $qb = $repository->createQueryBuilder('e');
+
+            if (!is_null($query)) {
+                $qb
+                    ->where('LOWER(e.'.$admin->getDefaultSearchColumn().') LIKE :query')
+                    ->setParameter('query', '%'.strtolower($query).'%')
+                ;
+            }
+
+            $qb->orderBy('e.'.$sort, $sortDirection);
+        } else {
+            $qb = $repository->findBySearchQueryBuilder($query, $sort, $sortDirection);
         }
 
-        $sort  = in_array($sort, $admin->getSortableFields()) ? $sort : $admin->getDefaultSort();
         $pager = Pagerfanta::createForCurrentPageWithMaxPerPage(
-            new QueryAdapter($repository->findBySearchQueryBuilder($query, $sort, $sortDirection)),
+            new QueryAdapter($qb),
             $page,
             $admin->getMaxPerPage()
         );

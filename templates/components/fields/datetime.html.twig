@@ -1,0 +1,8 @@
+{% if display == constant('Qsomazzi\\Particle\\Admin\\AdminInterface::ACTION_LIST') %}
+    <td>
+        <span title="{{ value|date(this.format) }}" >{{ value|time_diff }}</span>
+    </td>
+{% else %}
+    <dt class="col-md-3">{{ this.label }}</dt>
+    <dd class="col-md-9"><i class="ti ti-calendar"></i> {{ value ? value|date(this.format) : '' }}</dd>
+{% endif %}

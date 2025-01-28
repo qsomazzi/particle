@@ -1,0 +1,15 @@
+{% if display == constant('Qsomazzi\\Particle\\Admin\\AdminInterface::ACTION_LIST') %}
+    <td>
+        <div class="dropdown">
+            <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+            </button>
+            <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" data-turbo-frame="_top" href="{{ path('admin_' ~ identifier ~ '_show', {'id': value}) }}">Show</a>
+                <a class="dropdown-item" data-turbo-frame="_top" href="{{ path('admin_' ~ identifier ~ '_edit', {'id': value}) }}">Edit</a>
+            </div>
+        </div>
+    </td>
+{% else %}
+    {# Actions are already displayed in the action bar, no need to display them here in show mode #}
+{% endif %}

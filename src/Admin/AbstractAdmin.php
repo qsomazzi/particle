@@ -15,6 +15,13 @@ namespace Qsomazzi\Particle\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Qsomazzi\Particle\Component\Fields\Actions;
+use Qsomazzi\Particle\Component\Fields\Boolean;
+use Qsomazzi\Particle\Component\Fields\DateTime;
+use Qsomazzi\Particle\Component\Fields\FieldInterface;
+use Qsomazzi\Particle\Component\Fields\Id;
+use Qsomazzi\Particle\Component\Fields\Text;
+use Symfony\Component\String\Inflector\EnglishInflector;
 use Twig\Environment;
 
 abstract class AbstractAdmin
@@ -26,10 +33,12 @@ abstract class AbstractAdmin
     protected string $formClass;
     protected EntityRepository $repository;
     protected ?string $domain = null;
-    protected string $singularLabel;
-    protected string $pluralLabel;
+    protected ?string $singularLabel = null;
+    protected ?string $pluralLabel = null;
+    protected ?string $defaultSearchColumn = null;
     protected string $defaultSortColumn      = 'id';
-    protected string $defaultSortDirection   = 'DESC';
+    protected string $defaultSortDirection   = 'desc';
+    protected readonly EnglishInflector $inflector;
 
     public function __construct(
         protected readonly Environment $twig,
@@ -38,12 +47,23 @@ abstract class AbstractAdmin
     ) {
         $this->setup();
 
+        $this->inflector  = new EnglishInflector();
         $this->repository = $entityManager->getRepository($this->entityClass);
     }
 
-    abstract public function configureFields(): array;
+    abstract public function configureListFields(): array;
 
     abstract public function setup(): void;
+
+    public function configureShowFields(): array
+    {
+        return $this->configureListFields();
+    }
+
+    public function configureEditFields(): array
+    {
+        return $this->configureListFields();
+    }
 
     public function getEntityClass(): string
     {
@@ -67,38 +87,87 @@ abstract class AbstractAdmin
 
     public function getSingularLabel(): string
     {
-        return $this->singularLabel;
+        if (!is_null($this->singularLabel)) {
+            return $this->singularLabel;
+        }
+
+        $name = explode('\\', $this->entityClass);
+        $name = end($name);
+
+        return $this->inflector->singularize($name)[0];
     }
 
     public function getPluralLabel(): string
     {
-        return $this->pluralLabel;
+        if (!is_null($this->pluralLabel)) {
+            return $this->pluralLabel;
+        }
+
+        $name = explode('\\', $this->entityClass);
+        $name = end($name);
+
+        return $this->inflector->pluralize($name)[0];
     }
 
-    public function getDefaultSort(): string
+    public function getDefaultSearchColumn(): ?string
     {
-        return $this->defaultSortColumn;
+        return $this->defaultSearchColumn;
     }
 
-    public function getDefaultSortDirection(): string
+    public function getSort(?string $sort = null, ?string $sortDirection = null): array
     {
-        return $this->defaultSortDirection;
-    }
+        $sort          = $sort ?? $this->defaultSortColumn;
+        $sortDirection = $sortDirection ?? $this->defaultSortDirection;
 
-    public function getSortableFields(): array
-    {
-        $sortableFields = [];
-        foreach ($this->configureFields() as $field => $config) {
-            if ($config['sortable']) {
-                $sortableFields[] = $field;
+        foreach ($this->getFields() as $field) {
+            if ($field->isSortable() && $field->getKey() == $sort) {
+                return [$sort, $sortDirection];
             }
         }
 
-        return $sortableFields;
+        // sort column requested is not allowed, fallback to default
+        return [$this->defaultSortColumn, $this->defaultSortDirection];
     }
 
     public function getMaxPerPage(): int
     {
         return $this->maxPerPage;
+    }
+
+    public function getFields(string $action = AdminInterface::ACTION_LIST): array
+    {
+        $fields           = [];
+        $configuredFields = match ($action) {
+            AdminInterface::ACTION_LIST => $this->configureListFields(),
+            AdminInterface::ACTION_EDIT => $this->configureEditFields(),
+            AdminInterface::ACTION_SHOW => $this->configureShowFields(),
+        };
+
+        foreach ($configuredFields as $one) {
+            if ($one instanceof FieldInterface) {
+                $fields[] = $one;
+            } elseif ($one === 'id') {
+                $fields[] = Id::new($one, 'Id');
+            } elseif ($one === '_actions') {
+                $fields[] = Actions::new('id', 'Actions');
+            } else {
+                $fields[] = $this->guessField($one);
+            }
+        }
+
+        return $fields;
+    }
+
+    private function guessField(string $key, ?string $label = null): FieldInterface
+    {
+        $metadata     = $this->entityManager->getClassMetadata($this->entityClass);
+        $fieldMapping = $metadata->getFieldMapping($key);
+
+        return match ($fieldMapping['type']) {
+            'string', 'text', 'integer' => Text::new($key, $label),
+            'datetime_immutable'        => DateTime::new($key, $label),
+            'boolean'                   => Boolean::new($key, $label),
+            default                     => throw new \Exception(sprintf('Field type %s not handled with autoconfiguration, please configure it manually', $fieldMapping['type'])),
+        };
     }
 }

@@ -1,0 +1,14 @@
+{% if display == constant('Qsomazzi\\Particle\\Admin\\AdminInterface::ACTION_LIST') %}
+    <td>
+        {% for label in value %}
+            <span class="badge badge-outline text-blue">{{ label }}</span>
+        {% endfor %}
+    </td>
+{% else %}
+    <dt class="col-md-3">{{ this.label }}</dt>
+    <dd class="col-md-9">
+        {% for one in value %}
+            <span class="badge badge-outline text-blue">{{ one }}</span>
+        {% endfor %}
+    </dd>
+{% endif %}

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle;
 
+use Qsomazzi\Particle\Routing\AdminRouteLoader;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -38,7 +39,7 @@ class QsomazziParticleBundle extends AbstractBundle
         $container->import('../config/services.yaml');
 
         $container->services()
-            ->get('Qsomazzi\\Particle\\Routing\\AdminRouteLoader')
+            ->get(AdminRouteLoader::class)
             ->arg('$routesPrefix', $config['routesPrefix'])
         ;
 

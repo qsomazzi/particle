@@ -19,7 +19,13 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('app.admin')]
 interface AdminInterface
 {
-    public function configureFields(): array;
+    public const ACTION_EDIT = 'edit';
+    public const ACTION_LIST = 'list';
+    public const ACTION_SHOW = 'show';
+
+    public function configureListFields(): array;
+    public function configureShowFields(): array;
+    public function configureEditFields(): array;
 
     public function setup(): void;
 
@@ -35,11 +41,9 @@ interface AdminInterface
 
     public function getPluralLabel(): string;
 
-    public function getDefaultSort(): string;
+    public function getDefaultSearchColumn(): ?string;
 
-    public function getDefaultSortDirection(): string;
-
-    public function getSortableFields(): array;
+    public function getSort(?string $sort = null, ?string $sortDirection = null): array;
 
     public function getMaxPerPage(): int;
 }
