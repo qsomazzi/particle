@@ -15,64 +15,39 @@ namespace Qsomazzi\Particle\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Qsomazzi\Particle\Component\Fields\Actions;
 use Qsomazzi\Particle\Component\Fields\Boolean;
 use Qsomazzi\Particle\Component\Fields\DateTime;
 use Qsomazzi\Particle\Component\Fields\FieldInterface;
 use Qsomazzi\Particle\Component\Fields\Id;
 use Qsomazzi\Particle\Component\Fields\Text;
-use Symfony\Component\String\Inflector\EnglishInflector;
-use Twig\Environment;
+use Qsomazzi\Particle\Metadata\AdminMetadata;
+use Qsomazzi\Particle\Metadata\Index;
+use Qsomazzi\Particle\Metadata\Read;
+use Qsomazzi\Particle\Metadata\Update;
 
 abstract class AbstractAdmin
 {
-    /**
-     * @var class-string<object>
-     */
-    protected string $entityClass;
-    protected string $formClass;
-    protected EntityRepository $repository;
-    protected ?string $domain = null;
-    protected ?string $singularLabel = null;
-    protected ?string $pluralLabel = null;
-    protected ?string $defaultSearchColumn = null;
-    protected string $defaultSortColumn      = 'id';
-    protected string $defaultSortDirection   = 'desc';
-    protected readonly EnglishInflector $inflector;
+    private AdminMetadata $metadata;
+    private ClassMetadata $doctrineMetadata;
+    private EntityRepository $repository;
 
     public function __construct(
-        protected readonly Environment $twig,
-        protected readonly EntityManagerInterface $entityManager,
-        protected int $maxPerPage,
+        private readonly EntityManagerInterface $entityManager,
     ) {
-        $this->setup();
-
-        $this->inflector  = new EnglishInflector();
-        $this->repository = $entityManager->getRepository($this->entityClass);
     }
 
     abstract public function configureListFields(): array;
 
-    abstract public function setup(): void;
-
-    public function configureShowFields(): array
+    public function configureReadFields(): array
     {
         return $this->configureListFields();
     }
 
-    public function configureEditFields(): array
+    public function configureUpdateFields(): array
     {
         return $this->configureListFields();
-    }
-
-    public function getEntityClass(): string
-    {
-        return $this->entityClass;
-    }
-
-    public function getFormClass(): string
-    {
-        return $this->formClass;
     }
 
     public function getRepository(): EntityRepository
@@ -80,44 +55,58 @@ abstract class AbstractAdmin
         return $this->repository;
     }
 
-    public function getDomain(): ?string
+    public function getMetadata(): AdminMetadata
     {
-        return $this->domain;
+        return $this->metadata;
     }
 
-    public function getSingularLabel(): string
+    /**
+     * This function is called automatically by the CompilerPass, shouldn't be called manually
+     */
+    public function setup(array $metadata): void
     {
-        if (!is_null($this->singularLabel)) {
-            return $this->singularLabel;
+        $this->metadata         = new AdminMetadata(...$metadata);
+        $this->doctrineMetadata = $this->entityManager->getClassMetadata($this->metadata->getEntityClass());
+        $this->repository       = $this->entityManager->getRepository($this->metadata->getEntityClass());
+    }
+
+    public function getOperationName(string $operation): ?string
+    {
+        $operations = $this->metadata->getOperations();
+        foreach ($operations as $one) {
+            if ($one['type'] === $operation) {
+                return $one['name'];
+            }
         }
 
-        $name = explode('\\', $this->entityClass);
-        $name = end($name);
-
-        return $this->inflector->singularize($name)[0];
+        return null;
     }
 
-    public function getPluralLabel(): string
-    {
-        if (!is_null($this->pluralLabel)) {
-            return $this->pluralLabel;
-        }
 
-        $name = explode('\\', $this->entityClass);
-        $name = end($name);
 
-        return $this->inflector->pluralize($name)[0];
-    }
 
-    public function getDefaultSearchColumn(): ?string
-    {
-        return $this->defaultSearchColumn;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function getSort(?string $sort = null, ?string $sortDirection = null): array
     {
-        $sort          = $sort ?? $this->defaultSortColumn;
-        $sortDirection = $sortDirection ?? $this->defaultSortDirection;
+        $sort          = $sort ?? $this->metadata->getDefaultSortColumn();
+        $sortDirection = $sortDirection ?? $this->metadata->getDefaultSortDirection();
 
         foreach ($this->getFields() as $field) {
             if ($field->isSortable() && $field->getKey() == $sort) {
@@ -126,21 +115,16 @@ abstract class AbstractAdmin
         }
 
         // sort column requested is not allowed, fallback to default
-        return [$this->defaultSortColumn, $this->defaultSortDirection];
+        return [$this->metadata->getDefaultSortColumn(), $this->metadata->getDefaultSortDirection()];
     }
 
-    public function getMaxPerPage(): int
-    {
-        return $this->maxPerPage;
-    }
-
-    public function getFields(string $action = AdminInterface::ACTION_LIST): array
+    public function getFields(string $action = Index::TYPE): array
     {
         $fields           = [];
         $configuredFields = match ($action) {
-            AdminInterface::ACTION_LIST => $this->configureListFields(),
-            AdminInterface::ACTION_EDIT => $this->configureEditFields(),
-            AdminInterface::ACTION_SHOW => $this->configureShowFields(),
+            Index::TYPE  => $this->configureListFields(),
+            Update::TYPE => $this->configureUpdateFields(),
+            Read::TYPE   => $this->configureReadFields(),
         };
 
         foreach ($configuredFields as $one) {
@@ -149,7 +133,7 @@ abstract class AbstractAdmin
             } elseif ($one === 'id') {
                 $fields[] = Id::new($one, 'Id');
             } elseif ($one === '_actions') {
-                $fields[] = Actions::new('id', 'Actions');
+                $fields[] = Actions::new($this->metadata->getIdentifier(), 'Actions');
             } else {
                 $fields[] = $this->guessField($one);
             }
@@ -160,8 +144,7 @@ abstract class AbstractAdmin
 
     private function guessField(string $key, ?string $label = null): FieldInterface
     {
-        $metadata     = $this->entityManager->getClassMetadata($this->entityClass);
-        $fieldMapping = $metadata->getFieldMapping($key);
+        $fieldMapping = $this->doctrineMetadata->getFieldMapping($key);
 
         return match ($fieldMapping['type']) {
             'string', 'text', 'integer' => Text::new($key, $label),

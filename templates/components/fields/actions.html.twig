@@ -1,14 +1,23 @@
-{% if display == constant('Qsomazzi\\Particle\\Admin\\AdminInterface::ACTION_LIST') %}
+{% if display == constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE') %}
+    {% set readName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Read::TYPE')) %}
+    {% set updateName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Update::TYPE')) %}
+
     <td>
-        <div class="dropdown">
-            <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
-                Actions
-            </button>
-            <div class="dropdown-menu dropdown-menu-end">
-                <a class="dropdown-item" data-turbo-frame="_top" href="{{ path('admin_' ~ identifier ~ '_show', {'id': value}) }}">Show</a>
-                <a class="dropdown-item" data-turbo-frame="_top" href="{{ path('admin_' ~ identifier ~ '_edit', {'id': value}) }}">Edit</a>
+        {% if readName is not null or updateName is not null %}
+            <div class="dropdown">
+                <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                    Actions
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    {% if readName is not null %}
+                        <a class="dropdown-item" data-turbo-frame="_top" href="{{ path(readName, {(admin.metadata.identifier): value}) }}">Show</a>
+                    {% endif %}
+                    {% if updateName is not null %}
+                        <a class="dropdown-item" data-turbo-frame="_top" href="{{ path(updateName, {(admin.metadata.identifier): value}) }}">Edit</a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </td>
 {% else %}
     {# Actions are already displayed in the action bar, no need to display them here in show mode #}

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\Component\Fields;
 
-use Qsomazzi\Particle\Admin\AdminInterface;
+use Qsomazzi\Particle\Metadata\Index;
 
 trait FieldTrait
 {
@@ -21,7 +21,7 @@ trait FieldTrait
     private ?string $label = null;
     private mixed $value = null;
     private bool $sortable = true;
-    private string $display = AdminInterface::ACTION_LIST;
+    private string $display = Index::TYPE;
 
     public function getKey(): ?string
     {

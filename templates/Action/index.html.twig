@@ -1,13 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block headerPretitle %}{% if admin.domain is not null%}{{ admin.domain }}{% endif %}{% endblock %}
-{% block headerTitle %}{{ admin.pluralLabel }}{% endblock %}
+{% block headerPretitle %}{{ admin.metadata.domain }}{% endblock %}
+{% block headerTitle %}{{ admin.metadata.pluralLabel }}{% endblock %}
 
 {% block headerActions %}
-    <twig:button href="{{ path('admin_' ~ identifier ~ '_new') }}" class="btn-outline-success">
-        <i class="ti ti-plus"></i>
-        Create new {{ admin.singularLabel }}
-    </twig:button>
+    {% set createName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Create::TYPE')) %}
+
+    {% if createName is not null %}
+        <twig:button href="{{ path(createName) }}" class="btn-outline-success">
+            <i class="ti ti-plus"></i>
+            Create new {{ admin.metadata.singularLabel }}
+        </twig:button>
+    {% endif %}
 {% endblock %}
 
 {% macro sortArrow(sortName, sort, sortDirection) %}
@@ -30,11 +34,11 @@
                     Search:
                     <div class="ms-2 d-inline-block">
                         <form
-                            action="{{ path('admin_' ~ identifier) }}"
+                            action="{{ path(admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE'))) }}"
                             method="GET"
                             data-controller="auto-submit"
                             data-auto-submit-delay-value="300"
-                            data-turbo-frame="{{ identifier }}-list" >
+                            data-turbo-frame="{{ admin.metadata.shortName }}-list" >
                             <input
                                 type="search"
                                 class="fuzzy-search form-control form-control-sm"
@@ -48,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <turbo-frame id="{{ identifier }}-list" data-turbo-action="advance">
+        <turbo-frame id="{{ admin.metadata.shortName }}-list" data-turbo-action="advance">
             <div class="table-responsive">
                 <table class="table card-table table-vcenter text-nowrap">
                     <thead>
@@ -56,7 +60,7 @@
                         {% for field in admin.fields %}
                             {% if field.isSortable %}
                                 <th>
-                                    <a href="{{ path('admin_' ~ identifier, {
+                                    <a href="{{ path(admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')), {
                                         ...app.request.query.all(),
                                         sort: field.key,
                                         sortDirection: sort == field.key and sortDirection == 'asc' ? 'desc' : 'asc',
@@ -71,7 +75,7 @@
                     </tr>
                     </thead>
                     <tbody class="list">
-                        {% set display = constant('Qsomazzi\\Particle\\Admin\\AdminInterface::ACTION_LIST') %}
+                        {% set display = constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE') %}
                         {% for one in entities %}
                             <tr>
                                 {% for field in admin.getFields(display) %}
@@ -79,10 +83,10 @@
                                         component(
                                             constant('TYPE', field),
                                             {
-                                                value:      one.(field.key),
-                                                label:      field.label,
-                                                identifier: identifier,
-                                                display:    display
+                                                value:   one.(field.key),
+                                                label:   field.label,
+                                                display: display,
+                                                admin:   admin,
                                             }
                                         )
                                     }}
@@ -135,10 +139,14 @@
                                         Try adjusting your search or filter to find what you're looking for.
                                     </p>
                                     <div class="empty-action">
-                                        <twig:button href="{{ path('admin_' ~ identifier ~ '_new') }}" class="btn-outline-success" data-turbo-frame="_top">
-                                            <i class="ti ti-plus"></i>
-                                            Create new {{ admin.singularLabel }}
-                                        </twig:button>
+                                        {% set createName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Create::TYPE')) %}
+
+                                        {% if createName is not null %}
+                                            <twig:button href="{{ path(createName) }}" class="btn-outline-success" data-turbo-frame="_top">
+                                                <i class="ti ti-plus"></i>
+                                                Create new {{ admin.metadata.singularLabel }}
+                                            </twig:button>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </td>

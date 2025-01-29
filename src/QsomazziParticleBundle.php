@@ -13,36 +13,22 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle;
 
-use Qsomazzi\Particle\Routing\AdminRouteLoader;
-use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
+use Qsomazzi\Particle\DependencyInjection\Compiler\AdminPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class QsomazziParticleBundle extends AbstractBundle
 {
-    public function configure(DefinitionConfigurator $definition): void
-    {
-        $node = $definition->rootNode();
-
-        // @phpstan-ignore-next-line
-        $node
-            ->children()
-                ->scalarNode('routesPrefix')->defaultValue('/admin')->end()
-                ->integerNode('maxPerPage')->defaultValue(10)->end()
-            ->end()
-        ;
-    }
-
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import('../config/services.yaml');
+    }
 
-        $container->services()
-            ->get(AdminRouteLoader::class)
-            ->arg('$routesPrefix', $config['routesPrefix'])
-        ;
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
 
-        $container->parameters()->set('qsomazzi_particle.max_per_page', $config['maxPerPage']);
+        $container->addCompilerPass(new AdminPass());
     }
 }

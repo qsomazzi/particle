@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block headerPretitle %}{{ admin.metadata.domain }}{% endblock %}
-{% block headerTitle %}{{ admin.metadata.singularLabel }}{% endblock %}
+{% block headerTitle %}New {{ admin.metadata.singularLabel }}{% endblock %}
 
 {% block headerActions %}
     {% set indexName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')) %}
@@ -11,22 +11,12 @@
             Back to list
         </twig:button>
     {% endif %}
-
-    {% set readName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Read::TYPE')) %}
-    {% if readName is not null %}
-        <twig:button href="{{ path(readName, {(admin.metadata.identifier): entity.(admin.metadata.identifier)}) }}">
-            <i class="ti ti-eye"></i>
-            Show
-        </twig:button>
-    {% endif %}
-
-    {{ include('@Particle/Action/_delete_form.html.twig') }}
 {% endblock %}
 
 {% block content %}
     <div class="row row-deck row-cards">
         <div class="col-12">
-            {{ include('@Particle/Action/_form.html.twig', {'button_label': 'Update'}) }}
+            {{ include('@Particle/Action/_form.html.twig') }}
         </div>
     </div>
 {% endblock %}

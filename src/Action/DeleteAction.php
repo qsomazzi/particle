@@ -14,33 +14,38 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Qsomazzi\Particle\Admin\AdminInterface;
+use Qsomazzi\Particle\Metadata\Index;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
+use Qsomazzi\Particle\Utils\Guesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-final class RemoveAction
+final class DeleteAction
 {
     use ActionHelperTrait;
 
-    public function __invoke(Request $request, EntityManagerInterface $entityManager, string $id): Response
+    public function __invoke(Request $request, EntityManagerInterface $entityManager): Response
     {
         $admin      = $this->getAdmin($request->get('admin').'');
-        $identifier = $request->get('identifier', $admin->getEntityClass()).'';
-        $entity     = $admin->getRepository()->find($id);
+        $identifier = $admin->getMetadata()->getIdentifier();
+        $entity     = $admin->getRepository()->findOneBy([$identifier => $request->get($identifier)]);
 
-        if ($entity !== null && method_exists($entity, 'getId')) {
-            if ($this->isCsrfTokenValid('delete'.$entity->getId(), $request->getPayload()->getString('_token'))) {
+        if ($entity !== null) {
+            $get = 'get' . ucwords($identifier);
+
+            if ($this->isCsrfTokenValid('delete'.$entity->$get(), $request->getPayload()->getString('_token'))) {
                 $entityManager->remove($entity);
                 $entityManager->flush();
 
-                $this->addFlash('success', sprintf('%s removed with success !', $admin->getSingularLabel()));
+                $this->addFlash('success', sprintf('%s removed with success !', $admin->getMetadata()->getSingularLabel()));
             } else {
                 $this->addFlash('error', 'Invalid CSRF token');
             }
         }
 
-        return $this->redirectToRoute(sprintf('admin_%s', $identifier), [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute($admin->getOperationName(Index::TYPE), [], Response::HTTP_SEE_OTHER);
     }
 }

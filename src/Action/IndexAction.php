@@ -16,13 +16,14 @@ namespace Qsomazzi\Particle\Action;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
+use Qsomazzi\Particle\Utils\Guesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 
 #[AsController]
-final class ListAction
+final class IndexAction
 {
     use ActionHelperTrait;
 
@@ -33,8 +34,7 @@ final class ListAction
         #[MapQueryParameter] ?string $sortDirection = null,
         #[MapQueryParameter] ?string $query = null,
     ): Response {
-        $admin      = $this->getAdmin($request->get('admin').'');
-        $identifier = $request->get('identifier', $admin->getEntityClass()).'';
+        $admin = $this->getAdmin($request->get('admin').'');
 
         list ($sort, $sortDirection) = $admin->getSort($sort, $sortDirection);
 
@@ -44,7 +44,7 @@ final class ListAction
 
             if (!is_null($query)) {
                 $qb
-                    ->where('LOWER(e.'.$admin->getDefaultSearchColumn().') LIKE :query')
+                    ->where('LOWER(e.'.$admin->getMetadata()->getDefaultSearchColumns()[0].') LIKE :query')
                     ->setParameter('query', '%'.strtolower($query).'%')
                 ;
             }
@@ -57,7 +57,7 @@ final class ListAction
         $pager = Pagerfanta::createForCurrentPageWithMaxPerPage(
             new QueryAdapter($qb),
             $page,
-            $admin->getMaxPerPage()
+            $admin->getMetadata()->getMaxPerPage()
         );
 
         return $this->render('@Particle/Action/index.html.twig', [
@@ -65,7 +65,6 @@ final class ListAction
             'sort'          => $sort,
             'sortDirection' => $sortDirection,
             'admin'         => $admin,
-            'identifier'    => $identifier,
         ]);
     }
 }

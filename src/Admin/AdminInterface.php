@@ -14,36 +14,21 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Admin;
 
 use Doctrine\ORM\EntityRepository;
+use Qsomazzi\Particle\Metadata\AdminMetadata;
+use Qsomazzi\Particle\Metadata\Index;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('app.admin')]
 interface AdminInterface
 {
-    public const ACTION_EDIT = 'edit';
-    public const ACTION_LIST = 'list';
-    public const ACTION_SHOW = 'show';
-
     public function configureListFields(): array;
-    public function configureShowFields(): array;
-    public function configureEditFields(): array;
-
-    public function setup(): void;
-
-    public function getEntityClass(): string;
-
-    public function getFormClass(): string;
+    public function configureReadFields(): array;
+    public function configureUpdateFields(): array;
 
     public function getRepository(): EntityRepository;
-
-    public function getDomain(): ?string;
-
-    public function getSingularLabel(): string;
-
-    public function getPluralLabel(): string;
-
-    public function getDefaultSearchColumn(): ?string;
+    public function getMetadata(): AdminMetadata;
+    public function setup(array $metadata): void;
 
     public function getSort(?string $sort = null, ?string $sortDirection = null): array;
-
-    public function getMaxPerPage(): int;
+    public function getFields(string $action = Index::TYPE): array;
 }

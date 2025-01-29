@@ -21,8 +21,6 @@ final class Actions implements FieldInterface
     use FieldTrait;
     public const TYPE = 'actions';
 
-    private ?string $identifier = null;
-
     public static function new(string $key, ?string $label = null): self
     {
         return (new self())

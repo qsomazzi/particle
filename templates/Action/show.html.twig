@@ -1,17 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block headerPretitle %}{% if admin.domain is not null%}{{ admin.domain }}{% endif %}{% endblock %}
-{% block headerTitle %}{{ admin.singularLabel }}{% endblock %}
+{% block headerPretitle %}{{ admin.metadata.domain }}{% endblock %}
+{% block headerTitle %}{{ admin.metadata.singularLabel }}{% endblock %}
 
 {% block headerActions %}
-    <twig:button href="{{ path('admin_' ~ identifier) }}">
-        <i class="ti ti-arrow-left"></i>
-        Back to list
-    </twig:button>
-    <twig:button href="{{ path('admin_' ~ identifier ~ '_edit', {'id': entity.id}) }}">
-        <i class="ti ti-edit"></i>
-        Edit
-    </twig:button>
+    {% set indexName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')) %}
+    {% if indexName is not null %}
+        <twig:button href="{{ path(indexName) }}">
+            <i class="ti ti-arrow-left"></i>
+            Back to list
+        </twig:button>
+    {% endif %}
+
+    {% set updateName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Update::TYPE')) %}
+    {% if updateName is not null %}
+        <twig:button href="{{ path(updateName, {(admin.metadata.identifier): entity.(admin.metadata.identifier)}) }}">
+            <i class="ti ti-edit"></i>
+            Edit
+        </twig:button>
+    {% endif %}
 
     {{ include('@Particle/Action/_delete_form.html.twig') }}
 {% endblock %}
@@ -19,20 +26,20 @@
 {% block content %}
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">{{ admin.singularLabel }} #{{ entity.id }}</h3>
+            <h3 class="card-title">{{ admin.metadata.singularLabel }} #{{ entity.(admin.metadata.identifier) }}</h3>
         </div>
         <div class="card-body">
             <dl class="row">
-                {% set display = constant('Qsomazzi\\Particle\\Admin\\AdminInterface::ACTION_SHOW') %}
+                {% set display = constant('Qsomazzi\\Particle\\Metadata\\Read::TYPE') %}
                 {% for field in admin.getFields(display) %}
                     {{
                         component(
                             constant('TYPE', field),
                             {
-                                value:      entity.(field.key),
-                                label:      field.label,
-                                identifier: identifier,
-                                display:    display
+                                value:   entity.(field.key),
+                                label:   field.label,
+                                display: display,
+                                admin:   admin,
                             }
                         )
                     }}
