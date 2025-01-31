@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\Routing;
 
-use Qsomazzi\Particle\Metadata\OperationInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;

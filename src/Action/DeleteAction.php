@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Qsomazzi\Particle\Admin\AdminInterface;
 use Qsomazzi\Particle\Metadata\Index;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
-use Qsomazzi\Particle\Utils\Guesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -34,7 +32,7 @@ final class DeleteAction
         $entity     = $admin->getRepository()->findOneBy([$identifier => $request->get($identifier)]);
 
         if ($entity !== null) {
-            $get = 'get' . ucwords($identifier);
+            $get = 'get'.ucwords($identifier);
 
             if ($this->isCsrfTokenValid('delete'.$entity->$get(), $request->getPayload()->getString('_token'))) {
                 $entityManager->remove($entity);

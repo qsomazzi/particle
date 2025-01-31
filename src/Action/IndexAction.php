@@ -16,7 +16,6 @@ namespace Qsomazzi\Particle\Action;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
-use Qsomazzi\Particle\Utils\Guesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -36,7 +35,7 @@ final class IndexAction
     ): Response {
         $admin = $this->getAdmin($request->get('admin').'');
 
-        list ($sort, $sortDirection) = $admin->getSort($sort, $sortDirection);
+        list($sort, $sortDirection) = $admin->getSort($sort, $sortDirection);
 
         $repository = $admin->getRepository();
         if (!method_exists($repository, 'findBySearchQueryBuilder')) {

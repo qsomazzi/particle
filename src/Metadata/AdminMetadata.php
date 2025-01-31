@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Particle project.
+ *
+ * (c) Qsomazzi
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Qsomazzi\Particle\Metadata;
 
 use Qsomazzi\Particle\Attributes\Admin;
@@ -11,7 +20,7 @@ final readonly class AdminMetadata
         private string $entityClass,
         private string $formClass,
         private string $identifier,
-        private int    $maxPerPage,
+        private int $maxPerPage,
         private string $prefix,
         private string $domain,
         private string $singularLabel,
@@ -19,8 +28,8 @@ final readonly class AdminMetadata
         private string $shortName,
         private string $defaultSortColumn,
         private string $defaultSortDirection,
-        private array  $defaultSearchColumns,
-        private array  $operations
+        private array $defaultSearchColumns,
+        private array $operations,
     ) {
     }
 
@@ -122,8 +131,7 @@ final readonly class AdminMetadata
         string $shortName,
         string $identifier,
         ?array $operations,
-    ): array
-    {
+    ): array {
         $formattedOperations = [];
         $operations          = $operations ?? [Index::class, Read::class, Create::class, Update::class, Delete::class];
         foreach ($operations as $one) {

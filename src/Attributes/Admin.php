@@ -14,18 +14,18 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Attributes;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-readonly final class Admin
+final readonly class Admin
 {
     public function __construct(
-        private string  $formClass,
-        private string  $entityClass,
-        private string  $identifier = 'id',
-        private string  $prefix = '/admin',
-        private int     $maxPerPage = 10,
-        private string  $defaultSortColumn = 'id',
-        private string  $defaultSortDirection = 'desc',
-        private array   $defaultSearchColumns = [],
-        private ?array  $operations = null,
+        private string $formClass,
+        private string $entityClass,
+        private string $identifier = 'id',
+        private string $prefix = '/admin',
+        private int $maxPerPage = 10,
+        private string $defaultSortColumn = 'id',
+        private string $defaultSortDirection = 'desc',
+        private array $defaultSearchColumns = [],
+        private ?array $operations = null,
         private ?string $domain = null,
         private ?string $singularLabel = null,
         private ?string $pluralLabel = null,

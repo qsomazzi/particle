@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Action;
 
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
-use Qsomazzi\Particle\Utils\Guesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;

@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Qsomazzi\Particle\Admin\AdminInterface;
 use Qsomazzi\Particle\Metadata\Index;
 use Qsomazzi\Particle\Metadata\Update;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
@@ -43,7 +42,7 @@ final class CreateAction
             $this->addFlash('success', sprintf('%s added with success !', $admin->getMetadata()->getSingularLabel()));
 
             if ($request->get('submit') !== 'submit_and_close') {
-                $get = 'get' . ucwords($identifier);
+                $get = 'get'.ucwords($identifier);
 
                 return $this->redirectToRoute($admin->getOperationName(Update::TYPE), [$identifier => $entity->$get()], Response::HTTP_SEE_OTHER);
             }

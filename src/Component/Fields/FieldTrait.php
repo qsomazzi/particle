@@ -17,10 +17,10 @@ use Qsomazzi\Particle\Metadata\Index;
 
 trait FieldTrait
 {
-    private ?string $key = null;
-    private ?string $label = null;
-    private mixed $value = null;
-    private bool $sortable = true;
+    private ?string $key    = null;
+    private ?string $label  = null;
+    private mixed $value    = null;
+    private bool $sortable  = true;
     private string $display = Index::TYPE;
 
     public function getKey(): ?string
@@ -60,6 +60,7 @@ trait FieldTrait
     public function setValue(mixed $value): self
     {
         $this->value = $value;
+
         return $this;
     }
 

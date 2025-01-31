@@ -14,11 +14,9 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Qsomazzi\Particle\Admin\AdminInterface;
 use Qsomazzi\Particle\Metadata\Index;
 use Qsomazzi\Particle\Metadata\Update;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
-use Qsomazzi\Particle\Utils\Guesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -43,7 +41,7 @@ final class UpdateAction
             $this->addFlash('success', sprintf('%s updated with success !', $admin->getMetadata()->getSingularLabel()));
 
             if ($entity !== null && $request->get('submit') !== 'submit_and_close') {
-                $get = 'get' . ucwords($identifier);
+                $get = 'get'.ucwords($identifier);
 
                 return $this->redirectToRoute($admin->getOperationName(Update::TYPE), [$identifier => $entity->$get()], Response::HTTP_SEE_OTHER);
             }

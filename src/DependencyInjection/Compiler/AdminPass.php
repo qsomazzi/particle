@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\DependencyInjection\Compiler;
 
-
 use Qsomazzi\Particle\Attributes\Admin;
 use Qsomazzi\Particle\Metadata\AdminMetadata;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;

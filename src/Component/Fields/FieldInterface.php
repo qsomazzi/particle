@@ -16,5 +16,6 @@ namespace Qsomazzi\Particle\Component\Fields;
 interface FieldInterface
 {
     public static function new(string $key, ?string $label = null);
+
     public function isSortable(): bool;
 }

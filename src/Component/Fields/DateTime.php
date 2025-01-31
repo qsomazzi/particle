@@ -35,6 +35,7 @@ final class DateTime implements FieldInterface
     public function setFormat(string $format): DateTime
     {
         $this->format = $format;
+
         return $this;
     }
 }

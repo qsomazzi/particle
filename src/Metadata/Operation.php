@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Particle project.
+ *
+ * (c) Qsomazzi
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Qsomazzi\Particle\Metadata;
 
 abstract class Operation
@@ -7,8 +16,8 @@ abstract class Operation
     public function __construct(
         private readonly ?string $name,
         private readonly ?string $path,
-        private readonly string  $controller,
-        private readonly array   $methods,
+        private readonly string $controller,
+        private readonly array $methods,
     ) {
     }
 

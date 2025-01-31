@@ -82,27 +82,6 @@ abstract class AbstractAdmin
         return null;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function getSort(?string $sort = null, ?string $sortDirection = null): array
     {
         $sort          = $sort ?? $this->metadata->getDefaultSortColumn();

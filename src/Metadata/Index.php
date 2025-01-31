@@ -1,10 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Particle project.
+ *
+ * (c) Qsomazzi
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Qsomazzi\Particle\Metadata;
 
 use Qsomazzi\Particle\Action\IndexAction;
 
-class Index extends Operation  implements OperationInterface
+class Index extends Operation implements OperationInterface
 {
     public const TYPE = 'index';
 
