@@ -22,8 +22,10 @@ class Index extends Operation implements OperationInterface
         ?string $path = null,
         string $controller = IndexAction::class,
         array $methods = ['GET', 'POST'],
+        string $text = 'Back to list',
+        string $icon = 'ti ti-arrow-left',
     ): self {
-        return new Index($name, $path, $controller, $methods);
+        return new Index($name, $path, $controller, $methods, $text, $icon, null, null);
     }
 
     public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self

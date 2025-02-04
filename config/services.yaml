@@ -6,3 +6,9 @@ services:
 
   Qsomazzi\Particle\:
     resource: '../src/'
+
+  Qsomazzi\Particle\Menu\MenuBuilder:
+    arguments:
+      $homepage: '%qsomazzi_particle.homepage%'
+    tags:
+      - { name: knp_menu.menu_builder, method: createParticleMenu, alias: particle }

@@ -43,10 +43,10 @@ final class UpdateAction
             if ($entity !== null && $request->get('submit') !== 'submit_and_close') {
                 $get = 'get'.ucwords($identifier);
 
-                return $this->redirectToRoute($admin->getOperationName(Update::TYPE), [$identifier => $entity->$get()], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute($admin->getOperationByType(Update::TYPE)->getName(), [$identifier => $entity->$get()], Response::HTTP_SEE_OTHER);
             }
 
-            return $this->redirectToRoute($admin->getOperationName(Index::TYPE), [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute($admin->getOperationByType(Index::TYPE)->getName(), [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('@Particle/Action/edit.html.twig', [

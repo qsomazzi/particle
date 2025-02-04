@@ -22,8 +22,10 @@ class Update extends Operation implements OperationInterface
         ?string $path = null,
         string $controller = UpdateAction::class,
         array $methods = ['GET', 'POST'],
+        string $text = 'Edit',
+        string $icon = 'ti ti-edit',
     ): self {
-        return new Update($name, $path, $controller, $methods);
+        return new Update($name, $path, $controller, $methods, $text, $icon, null, null);
     }
 
     public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self

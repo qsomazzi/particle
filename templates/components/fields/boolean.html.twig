@@ -1,18 +1,18 @@
 {% if display == constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE') %}
     <td>
         {% if value %}
-            <i class="ti ti-check text-green"></i>
+            <i class="icon ti ti-check text-green"></i>
         {% else %}
-            <i class="ti ti-x text-red"></i>
+            <i class="icon ti ti-x text-red"></i>
         {% endif %}
     </td>
 {% else %}
     <dt class="col-md-3">{{ this.label }}</dt>
     <dd class="col-md-9">
         {% if value %}
-            <i class="ti ti-check text-green"></i>
+            <i class="icon ti ti-check text-green"></i>
         {% else %}
-            <i class="ti ti-x text-red"></i>
+            <i class="icon ti ti-x text-red"></i>
         {% endif %}
     </dd>
 {% endif %}

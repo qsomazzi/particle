@@ -1,8 +1,10 @@
-{% set deleteName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Delete::TYPE')) %}
-{% if deleteName is not null %}
-    {# We can't generate the Delete route, cause expected method is POST only. Since show url is the same, we use this one #}
-    <form method="post" action="{{ path(admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Read::TYPE')), {(admin.metadata.identifier): entity.(admin.metadata.identifier)}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+{% set deleteOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Delete::TYPE')) %}
+{% if deleteOperation is not null %}
+    <form method="post" action="{{ path(deleteOperation.name, {(admin.metadata.identifier): entity.(admin.metadata.identifier)}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ entity.(admin.metadata.identifier)) }}">
-        <button class="btn btn-outline-danger">Delete</button>
+        <button class="btn btn-outline-danger">
+            <i class="icon {{ deleteOperation.icon }}"></i>
+            {{ deleteOperation.text }}
+        </button>
     </form>
 {% endif %}

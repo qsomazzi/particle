@@ -56,8 +56,25 @@ final readonly class AdminMetadata
             'defaultSortColumn'    => $attribute->getDefaultSortColumn(),
             'defaultSortDirection' => $attribute->getDefaultSortDirection(),
             'defaultSearchColumns' => $attribute->getDefaultSearchColumns(),
-            'operations'           => self::buildOperations($prefix, $domain, $shortName, $identifier, $attribute->getOperations()),
+            'operations'           => self::serializeOperations($prefix, $domain, $shortName, $identifier, $attribute->getOperations()),
         ];
+    }
+
+    public static function hydrateOperations(array $operations): array
+    {
+        $hydratedOperations = [];
+        foreach ($operations as $config) {
+            $hydratedOperations[] = match ($config['type']) {
+                Create::TYPE => Create::build($config['name'], $config['path'], $config['controller'], $config['methods'], $config['text'], $config['icon']),
+                Index::TYPE  => Index::build($config['name'], $config['path'], $config['controller'], $config['methods'], $config['text'], $config['icon']),
+                Read::TYPE   => Read::build($config['name'], $config['path'], $config['controller'], $config['methods'], $config['text'], $config['icon']),
+                Delete::TYPE => Delete::build($config['name'], $config['path'], $config['controller'], $config['methods'], $config['text'], $config['icon']),
+                Update::TYPE => Update::build($config['name'], $config['path'], $config['controller'], $config['methods'], $config['text'], $config['icon']),
+                Custom::TYPE => Custom::build($config['name'], $config['path'], $config['controller'], $config['methods'], $config['text'], $config['icon'], $config['displayInRowActions'], $config['displayInPageActions']),
+            };
+        }
+
+        return $hydratedOperations;
     }
 
     public function getEntityClass(): string
@@ -125,7 +142,7 @@ final readonly class AdminMetadata
         return $this->operations;
     }
 
-    private static function buildOperations(
+    private static function serializeOperations(
         string $prefix,
         string $domain,
         string $shortName,

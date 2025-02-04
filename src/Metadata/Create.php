@@ -22,8 +22,10 @@ class Create extends Operation implements OperationInterface
         ?string $path = null,
         string $controller = CreateAction::class,
         array $methods = ['GET', 'POST'],
+        string $text = 'Create new',
+        string $icon = 'ti ti-plus',
     ): self {
-        return new Create($name, $path, $controller, $methods);
+        return new Create($name, $path, $controller, $methods, $text, $icon, null, null);
     }
 
     public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self

@@ -20,8 +20,12 @@ class Custom extends Operation implements OperationInterface
         ?string $path = null,
         ?string $controller = null,
         array $methods = ['GET'],
+        string $text = '',
+        string $icon = '',
+        ?bool $displayInRowActions = null,
+        ?bool $displayInPageActions = null,
     ): self {
-        return new Custom($name, $path, $controller, $methods);
+        return new Custom($name, $path, $controller, $methods, $text, $icon, $displayInRowActions, $displayInPageActions);
     }
 
     public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self
@@ -34,11 +38,17 @@ class Custom extends Operation implements OperationInterface
 
     public static function buildFromConfig(array $config, string $prefix, string $domain, string $shortName, string $identifier): self
     {
+        $path = sprintf('%s/%s/%s%s', $prefix, strtolower($domain), $shortName, $config['path'] ?? sprintf('/%s', $shortName));
+
         return self::build(
             sprintf('admin_%s_%s_%s', strtolower($domain), $shortName, $config['name'] ?? 'custom'),
-            sprintf('%s/%s/%s%s', $prefix, strtolower($domain), $shortName, $config['path'] ?? '/custom'),
+            $path,
             $config['controller'],
             $config['methods'] ?? ['GET'],
+            $config['text'] ?? ucfirst($config['name'] ?? 'custom'),
+            $config['icon'] ?? '',
+            (bool)($config['displayInRowActions'] ?? str_contains($path, '{')),
+            (bool)($config['displayInPageActions'] ?? true),
         );
     }
 }

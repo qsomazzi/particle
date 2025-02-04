@@ -22,15 +22,17 @@ class Read extends Operation implements OperationInterface
         ?string $path = null,
         string $controller = ReadAction::class,
         array $methods = ['GET'],
+        string $text = 'Show',
+        string $icon = 'ti ti-eye',
     ): self {
-        return new Read($name, $path, $controller, $methods);
+        return new Read($name, $path, $controller, $methods, $text, $icon, null, null);
     }
 
     public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self
     {
         return self::build(
             sprintf('admin_%s_%s_read', strtolower($domain), $shortName),
-            sprintf('%s/%s/%s/{%s}', $prefix, strtolower($domain), $shortName, $identifier),
+            sprintf('%s/%s/%s/{%s}/show', $prefix, strtolower($domain), $shortName, $identifier),
         );
     }
 }

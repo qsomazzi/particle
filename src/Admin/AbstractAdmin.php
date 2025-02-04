@@ -24,6 +24,7 @@ use Qsomazzi\Particle\Component\Fields\Id;
 use Qsomazzi\Particle\Component\Fields\Text;
 use Qsomazzi\Particle\Metadata\AdminMetadata;
 use Qsomazzi\Particle\Metadata\Index;
+use Qsomazzi\Particle\Metadata\OperationInterface;
 use Qsomazzi\Particle\Metadata\Read;
 use Qsomazzi\Particle\Metadata\Update;
 
@@ -65,21 +66,37 @@ abstract class AbstractAdmin
      */
     public function setup(array $metadata): void
     {
+        $metadata['operations'] = AdminMetadata::hydrateOperations($metadata['operations']);
+
         $this->metadata         = new AdminMetadata(...$metadata);
         $this->doctrineMetadata = $this->entityManager->getClassMetadata($this->metadata->getEntityClass());
         $this->repository       = $this->entityManager->getRepository($this->metadata->getEntityClass());
     }
 
-    public function getOperationName(string $operation): ?string
+    public function getOperationByType(string $type): ?OperationInterface
     {
-        $operations = $this->metadata->getOperations();
-        foreach ($operations as $one) {
-            if ($one['type'] === $operation) {
-                return $one['name'];
+        foreach ($this->metadata->getOperations() as $one) {
+            if ($one::TYPE === $type) {
+                return $one;
             }
         }
 
         return null;
+    }
+
+    public function getCustomOperations(string $location = OperationInterface::LOCATION_ACTIONS): array
+    {
+        $operations = [];
+
+        foreach ($this->metadata->getOperations() as $operation) {
+            if ($location === OperationInterface::LOCATION_ACTIONS && $operation->isdisplayInRowActions()) {
+                $operations[] = $operation;
+            } elseif ($location === OperationInterface::LOCATION_PAGE && $operation->isDisplayInPageActions()) {
+                $operations[] = $operation;
+            }
+        }
+
+        return $operations;
     }
 
     public function getSort(?string $sort = null, ?string $sortDirection = null): array

@@ -4,11 +4,11 @@
 {% block headerTitle %}New {{ admin.metadata.singularLabel }}{% endblock %}
 
 {% block headerActions %}
-    {% set indexName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')) %}
-    {% if indexName is not null %}
-        <twig:button href="{{ path(indexName) }}">
-            <i class="ti ti-arrow-left"></i>
-            Back to list
+    {% set indexOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')) %}
+    {% if indexOperation is not null %}
+        <twig:button href="{{ path(indexOperation.name) }}">
+            <i class="icon {{ indexOperation.icon }}"></i>
+            {{ indexOperation.text }}
         </twig:button>
     {% endif %}
 {% endblock %}

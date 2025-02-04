@@ -13,7 +13,8 @@ namespace Qsomazzi\Particle\Metadata;
 
 interface OperationInterface
 {
-    public static function build(?string $name, ?string $path, string $controller, array $methods): self;
+    public const LOCATION_ACTIONS = 'actions';
+    public const LOCATION_PAGE    = 'page';
 
     public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self;
 }

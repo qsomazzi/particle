@@ -44,6 +44,6 @@ final class DeleteAction
             }
         }
 
-        return $this->redirectToRoute($admin->getOperationName(Index::TYPE), [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute($admin->getOperationByType(Index::TYPE)->getName(), [], Response::HTTP_SEE_OTHER);
     }
 }

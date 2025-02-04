@@ -14,13 +14,16 @@ namespace Qsomazzi\Particle\Metadata;
 abstract class Operation
 {
     public function __construct(
-        private readonly ?string $name,
-        private readonly ?string $path,
-        private readonly string $controller,
-        private readonly array $methods,
+        private ?string $name,
+        private ?string $path,
+        private string $controller,
+        private array $methods,
+        private string $text,
+        private string $icon,
+        private ?bool $displayInRowActions,
+        private ?bool $displayInPageActions,
     ) {
     }
-
     abstract public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self;
 
     public function getName(): ?string
@@ -43,14 +46,38 @@ abstract class Operation
         return $this->methods;
     }
 
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon;
+    }
+
+    public function isDisplayInRowActions(): bool
+    {
+        return $this->displayInRowActions ?? false;
+    }
+
+    public function isDisplayInPageActions(): bool
+    {
+        return $this->displayInPageActions ?? false;
+    }
+
     public function toArray(): array
     {
         return [
-            'name'       => $this->name,
-            'path'       => $this->path,
-            'controller' => $this->controller,
-            'methods'    => $this->methods,
-            'type'       => static::TYPE,
+            'name'                 => $this->name,
+            'path'                 => $this->path,
+            'controller'           => $this->controller,
+            'methods'              => $this->methods,
+            'text'                 => $this->text,
+            'icon'                 => $this->icon,
+            'displayInRowActions'  => $this->displayInRowActions,
+            'displayInPageActions' => $this->displayInPageActions,
+            'type'                 => static::TYPE,
         ];
     }
 }

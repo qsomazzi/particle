@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\Routing;
 
+use Qsomazzi\Particle\Metadata\OperationInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
@@ -39,12 +40,14 @@ final class AdminRouteLoader extends Loader
 
         $routes = new RouteCollection();
         foreach ($this->admins as $admin) {
-            foreach ($admin->getMetadata()->getOperations() as $config) {
-                $route = new Route($config['path'], [
-                    '_controller' => $config['controller'],
-                    'admin'       => $admin::class,
-                ], [], [], '', [], $config['methods']);
-                $routes->add($config['name'], $route);
+            foreach ($admin->getMetadata()->getOperations() as $operation) {
+                if ($operation instanceof OperationInterface) {
+                    $route = new Route($operation->getPath(), [
+                        '_controller' => $operation->getController(),
+                        'admin'       => $admin::class,
+                    ], [], [], '', [], $operation->getMethods());
+                    $routes->add($operation->getName(), $route);
+                }
             }
         }
 

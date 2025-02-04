@@ -4,25 +4,30 @@
 {% block headerTitle %}{{ admin.metadata.pluralLabel }}{% endblock %}
 
 {% block headerActions %}
-    {% set createName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Create::TYPE')) %}
-
-    {% if createName is not null %}
-        <twig:button href="{{ path(createName) }}" class="btn-outline-success">
-            <i class="ti ti-plus"></i>
-            Create new {{ admin.metadata.singularLabel }}
+    {% set createOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Create::TYPE')) %}
+    {% if createOperation is not null %}
+        <twig:button href="{{ path(createOperation.name) }}" class="btn-outline-success">
+            <i class="icon {{ createOperation.icon }}"></i>
+            {{ createOperation.text ~ ' ' ~ admin.metadata.singularLabel }}
         </twig:button>
+    {% endif %}
+
+    {% set customOperations = admin.getCustomOperations(constant('Qsomazzi\\Particle\\Metadata\\OperationInterface::LOCATION_PAGE')) %}
+    {% if customOperations is not empty %}
+        {% for operation in customOperations %}
+            <twig:button href="{{ path(operation.name) }}" class="btn-outline-primary">
+                <i class="icon {{ operation.icon }}"></i>
+                {{ operation.text }}
+            </twig:button>
+        {% endfor %}
     {% endif %}
 {% endblock %}
 
-{% macro sortArrow(sortName, sort, sortDirection) %}
+{% macro sortClass(sortName, sort, sortDirection) %}
     {% if sort == sortName %}
-        {% if sortDirection == 'asc' %}
-            <i class="ti ti-arrow-up"></i>
-        {% else %}
-            <i class="ti ti-arrow-down"></i>
-        {% endif %}
+        {% if sortDirection == 'asc' %}table-sort asc{% else %}table-sort desc{% endif %}
     {% else %}
-        <i class="ti ti-arrows-up-down"></i>
+        table-sort
     {% endif %}
 {% endmacro %}
 
@@ -34,7 +39,7 @@
                     Search:
                     <div class="ms-2 d-inline-block">
                         <form
-                            action="{{ path(admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE'))) }}"
+                            action="{{ path(admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')).name) }}"
                             method="GET"
                             data-controller="auto-submit"
                             data-auto-submit-delay-value="300"
@@ -60,12 +65,13 @@
                         {% for field in admin.fields %}
                             {% if field.isSortable %}
                                 <th>
-                                    <a href="{{ path(admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')), {
+                                    <a class="{{ _self.sortClass(field.key, sort, sortDirection) }}"
+                                        href="{{ path(admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')).name, {
                                         ...app.request.query.all(),
                                         sort: field.key,
                                         sortDirection: sort == field.key and sortDirection == 'asc' ? 'desc' : 'asc',
                                     }) }}">
-                                        {{ field.label }} {{ _self.sortArrow(field.key, sort, sortDirection) }}
+                                        {{ field.label }}
                                     </a>
                                 </th>
                             {% else %}
@@ -139,12 +145,11 @@
                                         Try adjusting your search or filter to find what you're looking for.
                                     </p>
                                     <div class="empty-action">
-                                        {% set createName = admin.getOperationName(constant('Qsomazzi\\Particle\\Metadata\\Create::TYPE')) %}
-
-                                        {% if createName is not null %}
-                                            <twig:button href="{{ path(createName) }}" class="btn-outline-success" data-turbo-frame="_top">
-                                                <i class="ti ti-plus"></i>
-                                                Create new {{ admin.metadata.singularLabel }}
+                                        {% set createOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Create::TYPE')) %}
+                                        {% if createOperation is not null %}
+                                            <twig:button href="{{ path(createOperation.name) }}" class="btn-outline-success" data-turbo-frame="_top">
+                                                <i class="icon {{ createOperation.icon }}"></i>
+                                                {{ createOperation.text ~ ' ' ~ admin.metadata.singularLabel }}
                                             </twig:button>
                                         {% endif %}
                                     </div>
