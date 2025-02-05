@@ -27,6 +27,8 @@ final class AdminRouteLoader extends Loader
 
     public function __construct(
         #[TaggedIterator('app.admin')] private readonly iterable $admins,
+        private readonly string $qsomazziParticlePrefix,
+        private readonly array $qsomazziParticleHomepage,
         ?string $env = null,
     ) {
         parent::__construct($env);
@@ -39,10 +41,18 @@ final class AdminRouteLoader extends Loader
         }
 
         $routes = new RouteCollection();
+
+        // Add the homepage route
+        $route = new Route($this->qsomazziParticlePrefix.'/', [
+            '_controller' => $this->qsomazziParticleHomepage['controller'],
+        ], [], [], '', [], ['GET']);
+        $routes->add($this->qsomazziParticleHomepage['route'], $route);
+
+        // Add the routes for each admin
         foreach ($this->admins as $admin) {
             foreach ($admin->getMetadata()->getOperations() as $operation) {
                 if ($operation instanceof OperationInterface) {
-                    $route = new Route($operation->getPath(), [
+                    $route = new Route($this->qsomazziParticlePrefix.$operation->getPath(), [
                         '_controller' => $operation->getController(),
                         'admin'       => $admin::class,
                     ], [], [], '', [], $operation->getMethods());

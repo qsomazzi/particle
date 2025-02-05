@@ -3,12 +3,14 @@ services:
     autowire: true
     autoconfigure: true
     public: false
+    bind:
+      $qsomazziParticlePrefix: '%qsomazzi_particle.prefix%'
+      $qsomazziParticleHomepage: '%qsomazzi_particle.homepage%'
+      $qsomazziParticleTemplates: '%qsomazzi_particle.templates%'
 
   Qsomazzi\Particle\:
     resource: '../src/'
 
   Qsomazzi\Particle\Menu\MenuBuilder:
-    arguments:
-      $homepage: '%qsomazzi_particle.homepage%'
     tags:
       - { name: knp_menu.menu_builder, method: createParticleMenu, alias: particle }

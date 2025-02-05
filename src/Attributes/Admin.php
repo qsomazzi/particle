@@ -20,7 +20,7 @@ final readonly class Admin
         private string $formClass,
         private string $entityClass,
         private string $identifier = 'id',
-        private string $prefix = '/admin',
+        private string $prefix = '',
         private int $maxPerPage = 10,
         private string $defaultSortColumn = 'id',
         private string $defaultSortDirection = 'desc',

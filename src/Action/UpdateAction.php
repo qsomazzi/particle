@@ -26,7 +26,7 @@ final class UpdateAction
 {
     use ActionHelperTrait;
 
-    public function __invoke(Request $request, EntityManagerInterface $entityManager): Response
+    public function __invoke(Request $request, EntityManagerInterface $entityManager, array $qsomazziParticleTemplates): Response
     {
         $admin      = $this->getAdmin($request->get('admin').'');
         $identifier = $admin->getMetadata()->getIdentifier();
@@ -49,7 +49,7 @@ final class UpdateAction
             return $this->redirectToRoute($admin->getOperationByType(Index::TYPE)->getName(), [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('@Particle/Action/edit.html.twig', [
+        return $this->render($qsomazziParticleTemplates[Update::TYPE], [
             'entity' => $entity,
             'form'   => $form->createView(),
             'admin'  => $admin,

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Qsomazzi\Particle\Action;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Qsomazzi\Particle\Metadata\Create;
 use Qsomazzi\Particle\Metadata\Index;
 use Qsomazzi\Particle\Metadata\Update;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
@@ -26,7 +27,7 @@ final class CreateAction
 {
     use ActionHelperTrait;
 
-    public function __invoke(Request $request, EntityManagerInterface $entityManager): Response
+    public function __invoke(Request $request, EntityManagerInterface $entityManager, array $qsomazziParticleTemplates): Response
     {
         $admin      = $this->getAdmin($request->get('admin').'');
         $identifier = $admin->getMetadata()->getIdentifier();
@@ -50,7 +51,7 @@ final class CreateAction
             return $this->redirectToRoute($admin->getOperationByType(Index::TYPE)->getName(), [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('@Particle/Action/create.html.twig', [
+        return $this->render($qsomazziParticleTemplates[Create::TYPE], [
             'entity' => $entity,
             'form'   => $form->createView(),
             'admin'  => $admin,

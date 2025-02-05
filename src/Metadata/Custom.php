@@ -47,8 +47,8 @@ class Custom extends Operation implements OperationInterface
             $config['methods'] ?? ['GET'],
             $config['text'] ?? ucfirst($config['name'] ?? 'custom'),
             $config['icon'] ?? '',
-            (bool)($config['displayInRowActions'] ?? str_contains($path, '{')),
-            (bool)($config['displayInPageActions'] ?? true),
+            (bool) ($config['displayInRowActions'] ?? str_contains($path, '{')),
+            (bool) ($config['displayInPageActions'] ?? true),
         );
     }
 }

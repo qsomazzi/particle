@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
         <title>{% block title %}{{ projectName }}{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset(favicon) }}">
         {% block stylesheets %}
         {% endblock %}
         {% block javascripts %}
@@ -21,8 +22,8 @@
                             </button>
                             <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
                                 {% block brandName %}
-                                    <a href="{{ path(homepage) }}">
-                                        <img src="{{ asset(favicon) }}" width="110" height="32" alt="{{ projectName }}" class="navbar-brand-image" />
+                                    <a href="{{ path(homepage.route) }}">
+                                        <img src="{{ asset(projectIcon) }}" height="48" alt="{{ projectName }}" />
                                     </a>
                                 {% endblock %}
                             </h1>

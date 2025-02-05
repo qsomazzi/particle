@@ -15,6 +15,7 @@ namespace Qsomazzi\Particle\Action;
 
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use Qsomazzi\Particle\Metadata\Index;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,7 @@ final class IndexAction
 
     public function __invoke(
         Request $request,
+        array $qsomazziParticleTemplates,
         #[MapQueryParameter] int $page = 1,
         #[MapQueryParameter] ?string $sort = null,
         #[MapQueryParameter] ?string $sortDirection = null,
@@ -59,7 +61,7 @@ final class IndexAction
             $admin->getMetadata()->getMaxPerPage()
         );
 
-        return $this->render('@Particle/Action/index.html.twig', [
+        return $this->render($qsomazziParticleTemplates[Index::TYPE], [
             'entities'      => $pager,
             'sort'          => $sort,
             'sortDirection' => $sortDirection,

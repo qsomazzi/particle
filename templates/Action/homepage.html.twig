@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block headerPretitle %}Overview{% endblock %}
+{% block headerTitle %}Dashboard{% endblock %}
+
+{% block headerActions %}
+    {% for link in dashboardLinks %}
+        <twig:button href="{{ link.url }}" target="{{ link.target }}">
+            {% if link.icon is not null %}<i class="icon {{ link.icon }}"></i>{% endif %}
+            {{ link.label }}
+        </twig:button>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="row row-deck row-cards">
+        <div class="col-12">
+            <div class="card card-md">
+                <div class="card-stamp card-stamp-lg">
+                    <div class="card-stamp-icon bg-primary">
+                        <i class="ti ti-dots"></i>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-10">
+                            <h3 class="h1">Welcome on {{ projectName }}</h3>
+                            <div class="markdown text-secondary">
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

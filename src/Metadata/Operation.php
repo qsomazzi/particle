@@ -24,6 +24,7 @@ abstract class Operation
         private ?bool $displayInPageActions,
     ) {
     }
+
     abstract public static function buildFromGuesser(string $prefix, string $domain, string $shortName, string $identifier): self;
 
     public function getName(): ?string

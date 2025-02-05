@@ -29,10 +29,14 @@ class TwigPass implements CompilerPassInterface
         $def->addMethodCall('addGlobal', ['projectName', $container->getParameter(QsomazziParticleBundle::PARAMETER_PROJECT_NAME)]);
         $def->addMethodCall('addGlobal', ['projectIcon', $container->getParameter(QsomazziParticleBundle::PARAMETER_PROJECT_ICON)]);
         $def->addMethodCall('addGlobal', ['favicon', $container->getParameter(QsomazziParticleBundle::PARAMETER_FAVICON)]);
-        $def->addMethodCall('addGlobal', ['homepage', $container->getParameter(QsomazziParticleBundle::PARAMETER_HOMEPAGE)]);
+        $def->addMethodCall('addGlobal', ['prefix', $container->getParameter(QsomazziParticleBundle::PARAMETER_PREFIX)]);
         $def->addMethodCall('addGlobal', ['logout', $container->getParameter(QsomazziParticleBundle::PARAMETER_LOGOUT)]);
-        $def->addMethodCall('addGlobal', ['headerLinks', $container->getParameter(QsomazziParticleBundle::PARAMETER_HEADER_LINKS)]);
-        $def->addMethodCall('addGlobal', ['footerLinks', $container->getParameter(QsomazziParticleBundle::PARAMETER_FOOTER_LINKS)]);
         $def->addMethodCall('addGlobal', ['search', $container->getParameter(QsomazziParticleBundle::PARAMETER_SEARCH)]);
+
+        $def->addMethodCall('addGlobal', ['homepage', $container->getParameter(QsomazziParticleBundle::PARAMETER_HOMEPAGE)]);
+
+        $def->addMethodCall('addGlobal', ['headerLinks', $container->getParameter(QsomazziParticleBundle::PARAMETER_HEADER_LINKS)]);
+        $def->addMethodCall('addGlobal', ['dashboardLinks', $container->getParameter(QsomazziParticleBundle::PARAMETER_DASHBOARD_LINKS)]);
+        $def->addMethodCall('addGlobal', ['footerLinks', $container->getParameter(QsomazziParticleBundle::PARAMETER_FOOTER_LINKS)]);
     }
 }

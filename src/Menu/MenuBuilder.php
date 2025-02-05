@@ -31,9 +31,8 @@ final class MenuBuilder
         private readonly FactoryInterface $factory,
         private readonly RequestStack $requestStack,
         #[TaggedIterator('app.admin')] private readonly iterable $admins,
-        private readonly string $homepage,
-    )
-    {
+        private readonly array $qsomazziParticleHomepage,
+    ) {
     }
 
     public function createParticleMenu(): ItemInterface
@@ -43,13 +42,13 @@ final class MenuBuilder
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'navbar-nav');
 
-        $menu->addChild('Home', ['route' => $this->homepage])
+        $menu->addChild('Home', ['route' => $this->qsomazziParticleHomepage['route']])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link nav-link-title')
         ;
 
         foreach ($this->admins as $admin) {
-            if ($admin instanceof AdminInterface){
+            if ($admin instanceof AdminInterface) {
                 $indexOperation = $admin->getOperationByType(Index::TYPE);
 
                 if ($indexOperation !== null) {
@@ -61,7 +60,7 @@ final class MenuBuilder
                     ;
 
                     $createOperation = $admin->getOperationByType(Create::TYPE);
-                    $readOperation = $admin->getOperationByType(Read::TYPE);
+                    $readOperation   = $admin->getOperationByType(Read::TYPE);
                     $updateOperation = $admin->getOperationByType(Update::TYPE);
 
                     $identifierValue = $request instanceof Request ? $request->get($metadata->getIdentifier(), 0) : 0;
@@ -69,17 +68,20 @@ final class MenuBuilder
                     if ($createOperation !== null) {
                         $adminMenuItem
                             ->addChild(sprintf('%s - Add', $metadata->getSingularLabel()), ['route' => $createOperation->getName()])
-                            ->setDisplay(false);
+                            ->setDisplay(false)
+                        ;
                     }
                     if ($readOperation !== null) {
                         $adminMenuItem
                             ->addChild(sprintf('%s - Read', $metadata->getSingularLabel()), ['route' => $readOperation->getName(), 'routeParameters' => [$metadata->getIdentifier() => $identifierValue]])
-                            ->setDisplay(false);
+                            ->setDisplay(false)
+                        ;
                     }
                     if ($updateOperation !== null) {
                         $adminMenuItem
                             ->addChild(sprintf('%s - Edit', $metadata->getSingularLabel()), ['route' => $updateOperation->getName(), 'routeParameters' => [$metadata->getIdentifier() => $identifierValue]])
-                            ->setDisplay(false);
+                            ->setDisplay(false)
+                        ;
                     }
 
                     $customOperations = $admin->getCustomOperations(OperationInterface::LOCATION_PAGE);
@@ -95,8 +97,8 @@ final class MenuBuilder
                         $adminMenuItem
                             ->setAttribute('class', 'nav-item dropdown')
                             ->setLinkAttributes([
-                                'class' => 'nav-link dropdown-toggle',
-                                'data-bs-toggle' => 'dropdown',
+                                'class'              => 'nav-link dropdown-toggle',
+                                'data-bs-toggle'     => 'dropdown',
                                 'data-bs-auto-close' => 'outside',
                             ])
                             ->setChildrenAttribute('class', 'dropdown-menu')
