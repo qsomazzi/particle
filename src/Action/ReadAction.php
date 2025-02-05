@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\Action;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Qsomazzi\Particle\Metadata\Read;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +25,18 @@ final class ReadAction
 {
     use ActionHelperTrait;
 
-    public function __invoke(Request $request, array $qsomazziParticleTemplates): Response
+    public function __invoke(Request $request, EntityManagerInterface $em, array $qsomazziParticleTemplates): Response
     {
         $admin      = $this->getAdmin($request->get('admin').'');
         $identifier = $admin->getMetadata()->getIdentifier();
-        $entity     = $admin->getRepository()->findOneBy([$identifier => $request->get($identifier)]);
+
+        $entity = $em->createQueryBuilder()
+            ->select('e')
+            ->from($admin->getMetadata()->getEntityClass(), 'e')
+            ->where('e.'.$identifier.' = :'.$identifier)
+            ->setParameter($identifier, $request->get($identifier))
+            ->getQuery()
+            ->getOneOrNullResult();
 
         return $this->render($qsomazziParticleTemplates[Read::TYPE], [
             'entity' => $entity,

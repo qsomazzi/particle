@@ -30,7 +30,13 @@ final class UpdateAction
     {
         $admin      = $this->getAdmin($request->get('admin').'');
         $identifier = $admin->getMetadata()->getIdentifier();
-        $entity     = $admin->getRepository()->findOneBy([$identifier => $request->get($identifier)]);
+        $entity     = $entityManager->createQueryBuilder()
+            ->select('e')
+            ->from($admin->getMetadata()->getEntityClass(), 'e')
+            ->where('e.'.$identifier.' = :'.$identifier)
+            ->setParameter($identifier, $request->get($identifier))
+            ->getQuery()
+            ->getOneOrNullResult();
 
         $form = $this->createForm($admin->getMetadata()->getFormClass(), $entity);
         $form->handleRequest($request);

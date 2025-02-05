@@ -13,14 +13,16 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\Action;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Qsomazzi\Particle\Metadata\Index;
+use Qsomazzi\Particle\RequestPayload\IndexPayload;
 use Qsomazzi\Particle\Traits\ActionHelperTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
 #[AsController]
 final class IndexAction
@@ -28,43 +30,26 @@ final class IndexAction
     use ActionHelperTrait;
 
     public function __invoke(
-        Request $request,
-        array $qsomazziParticleTemplates,
-        #[MapQueryParameter] int $page = 1,
-        #[MapQueryParameter] ?string $sort = null,
-        #[MapQueryParameter] ?string $sortDirection = null,
-        #[MapQueryParameter] ?string $query = null,
+        Request                         $request,
+        EntityManagerInterface          $entityManager,
+        array                           $qsomazziParticleTemplates,
+        #[MapQueryString] ?IndexPayload $payload
     ): Response {
         $admin = $this->getAdmin($request->get('admin').'');
 
-        list($sort, $sortDirection) = $admin->getSort($sort, $sortDirection);
+        // By default, if we don't have any query params, the payload is null, so we need to create a new one
+        $payload = $payload ?? new IndexPayload();
 
-        $repository = $admin->getRepository();
-        if (!method_exists($repository, 'findBySearchQueryBuilder')) {
-            $qb = $repository->createQueryBuilder('e');
-
-            if (!is_null($query)) {
-                $qb
-                    ->where('LOWER(e.'.$admin->getMetadata()->getDefaultSearchColumns()[0].') LIKE :query')
-                    ->setParameter('query', '%'.strtolower($query).'%')
-                ;
-            }
-
-            $qb->orderBy('e.'.$sort, $sortDirection);
-        } else {
-            $qb = $repository->findBySearchQueryBuilder($query, $sort, $sortDirection);
-        }
-
-        $pager = Pagerfanta::createForCurrentPageWithMaxPerPage(
-            new QueryAdapter($qb),
-            $page,
+        $entities = Pagerfanta::createForCurrentPageWithMaxPerPage(
+            new QueryAdapter($admin->getQueryBuilder($entityManager, $payload)),
+            $payload->page,
             $admin->getMetadata()->getMaxPerPage()
         );
 
         return $this->render($qsomazziParticleTemplates[Index::TYPE], [
-            'entities'      => $pager,
-            'sort'          => $sort,
-            'sortDirection' => $sortDirection,
+            'entities'      => $entities,
+            'sort'          => $payload->sort,
+            'sortDirection' => $payload->sortDirection,
             'admin'         => $admin,
         ]);
     }

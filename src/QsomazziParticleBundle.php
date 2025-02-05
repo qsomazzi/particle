@@ -65,6 +65,7 @@ class QsomazziParticleBundle extends AbstractBundle
                 ->arrayNode('templates')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->scalarNode('pagination')->defaultValue('@Particle/pagination.html.twig')->isRequired()->end()
                         ->scalarNode('homepage')->defaultValue('@Particle/Action/homepage.html.twig')->isRequired()->end()
                         ->scalarNode(Create::TYPE)->defaultValue('@Particle/Action/create.html.twig')->isRequired()->end()
                         ->scalarNode(Index::TYPE)->defaultValue('@Particle/Action/index.html.twig')->isRequired()->end()

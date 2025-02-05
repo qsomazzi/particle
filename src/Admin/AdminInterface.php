@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\Admin;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Qsomazzi\Particle\Metadata\AdminMetadata;
 use Qsomazzi\Particle\Metadata\Index;
+use Qsomazzi\Particle\RequestPayload\IndexPayload;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('app.admin')]
@@ -27,13 +29,11 @@ interface AdminInterface
 
     public function configureUpdateFields(): array;
 
-    public function getRepository(): EntityRepository;
-
     public function getMetadata(): AdminMetadata;
 
-    public function setup(array $metadata): void;
+    public function getQueryBuilder(EntityManagerInterface $entityManager, IndexPayload $payload): QueryBuilder;
 
-    public function getSort(?string $sort = null, ?string $sortDirection = null): array;
+    public function setup(array $metadata, EntityManagerInterface $entityManager): void;
 
     public function getFields(string $action = Index::TYPE): array;
 }
