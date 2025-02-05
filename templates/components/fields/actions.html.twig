@@ -1,0 +1,44 @@
+{% if display == constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE') %}
+    {% set readOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Read::TYPE')) %}
+    {% set updateOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Update::TYPE')) %}
+    {% set customOperations = admin.getCustomOperations() %}
+
+    <td>
+        {% if readOperation is not null or updateOperation is not null or customOperations is not empty %}
+            <div class="dropdown">
+                <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                    Actions
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    {% if readOperation is not null %}
+                        <a class="dropdown-item" data-turbo-frame="_top" href="{{ path(readOperation.name, {(admin.metadata.identifier): value}) }}">
+                            <i class="icon dropdown-item-icon {{ readOperation.icon }}"></i>
+                            {{ readOperation.text }}
+                        </a>
+                    {% endif %}
+
+                    {% if updateOperation is not null %}
+                        <a class="dropdown-item" data-turbo-frame="_top" href="{{ path(updateOperation.name, {(admin.metadata.identifier): value}) }}">
+                            <i class="icon dropdown-item-icon {{ updateOperation.icon }}"></i>
+                            {{ updateOperation.text }}
+                        </a>
+                    {% endif %}
+
+                    {% if customOperations is not empty %}
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-header">Custom actions</span>
+
+                        {% for operation in customOperations %}
+                            <a class="dropdown-item" data-turbo-frame="_top" href="{{ path(operation.name, {(admin.metadata.identifier): value}) }}">
+                                <i class="icon dropdown-item-icon {{ operation.icon }}"></i>
+                                {{ operation.text }}
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </td>
+{% else %}
+    {# Actions are already displayed in the action bar, no need to display them here in show mode #}
+{% endif %}

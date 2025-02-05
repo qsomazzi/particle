@@ -1,0 +1,8 @@
+{% if display == constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE') %}
+    <td>
+        <span title="{{ value|date(this.format) }}" >{{ value|time_diff }}</span>
+    </td>
+{% else %}
+    <dt class="col-md-3">{{ this.label }}</dt>
+    <dd class="col-md-9"><i class="icon ti ti-calendar"></i> {{ value ? value|date(this.format) : '' }}</dd>
+{% endif %}

@@ -1,0 +1,6 @@
+{% if display == constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE') %}
+    <td>{{ value }}</td>
+{% else %}
+    <dt class="col-md-3">{{ this.label }}</dt>
+    <dd class="col-md-9">{{ value }}</dd>
+{% endif %}

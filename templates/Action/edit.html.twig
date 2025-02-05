@@ -1,17 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block headerPretitle %}{% if admin.domain is not null%}{{ admin.domain }}{% endif %}{% endblock %}
-{% block headerTitle %}{{ admin.singularLabel }}{% endblock %}
+{% block headerPretitle %}{{ admin.metadata.domain }}{% endblock %}
+{% block headerTitle %}{{ admin.metadata.singularLabel }}{% endblock %}
 
 {% block headerActions %}
-    <twig:button href="{{ path('admin_' ~ identifier) }}">
-        <i class="ti ti-arrow-left"></i>
-        Back to list
-    </twig:button>
-    <twig:button href="{{ path('admin_' ~ identifier ~ '_show', {'id': entity.id}) }}">
-        <i class="ti ti-eye"></i>
-        Show
-    </twig:button>
+    {% set indexOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')) %}
+    {% if indexOperation is not null %}
+        <twig:button href="{{ path(indexOperation.name) }}">
+            <i class="icon {{ indexOperation.icon }}"></i>
+            {{ indexOperation.text }}
+        </twig:button>
+    {% endif %}
+
+    {% set readOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Read::TYPE')) %}
+    {% if readOperation is not null %}
+        <twig:button href="{{ path(readOperation.name, {(admin.metadata.identifier): entity.(admin.metadata.identifier)}) }}">
+            <i class="icon {{ readOperation.icon }}"></i>
+            {{ readOperation.text }}
+        </twig:button>
+    {% endif %}
 
     {{ include('@Particle/Action/_delete_form.html.twig') }}
 {% endblock %}

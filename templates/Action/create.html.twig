@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block headerPretitle %}{{ admin.metadata.domain }}{% endblock %}
+{% block headerTitle %}New {{ admin.metadata.singularLabel }}{% endblock %}
+
+{% block headerActions %}
+    {% set indexOperation = admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')) %}
+    {% if indexOperation is not null %}
+        <twig:button href="{{ path(indexOperation.name) }}">
+            <i class="icon {{ indexOperation.icon }}"></i>
+            {{ indexOperation.text }}
+        </twig:button>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="row row-deck row-cards">
+        <div class="col-12">
+            {{ include('@Particle/Action/_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

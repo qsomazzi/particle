@@ -4,7 +4,8 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-        <title>{% block title %}Particle{% endblock %}</title>
+        <title>{% block title %}{{ projectName }}{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset(favicon) }}">
         {% block stylesheets %}
         {% endblock %}
         {% block javascripts %}
@@ -20,14 +21,36 @@
                                 <span class="navbar-toggler-icon"></span>
                             </button>
                             <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-                                {% block brandName %}{% endblock %}
+                                {% block brandName %}
+                                    <a href="{{ path(homepage.route) }}">
+                                        <img src="{{ asset(projectIcon) }}" height="48" alt="{{ projectName }}" />
+                                    </a>
+                                {% endblock %}
                             </h1>
                             <div class="navbar-nav flex-row order-md-last">
                                 <div class="nav-item d-none d-md-flex me-3">
-                                    {% block navBarActions %}{% endblock %}
+                                    {% for link in headerLinks %}
+                                        <twig:button href="{{ link.url }}" target="{{ link.target }}">
+                                            {% if link.icon is not null %}<i class="icon {{ link.icon }}"></i>{% endif %}
+                                            {{ link.label }}
+                                        </twig:button>
+                                    {% endfor %}
                                 </div>
                                 <twig:notifications />
-                                {% block navBarUser %}{% endblock %}
+                                {% block navBarUser %}
+                                    <div class="nav-item dropdown">
+                                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                                            <span class="avatar avatar-sm" style="background-image: url('{{ app.user.avatar }}')"></span>
+                                            <div class="d-none d-xl-block ps-2">
+                                                <div>{{ app.user }}</div>
+                                                <div class="mt-1 small text-secondary">{{ app.user.displayName }}</div>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                            <a href="{{ path(logout) }}" class="dropdown-item">Logout</a>
+                                        </div>
+                                    </div>
+                                {% endblock %}
                             </div>
                         </div>
                     </header>
@@ -37,11 +60,11 @@
                                 <div class="container-xl">
                                     <div class="row flex-fill align-items-center">
                                         <div class="col">
-                                            {% block menu %}{% endblock %}
+                                            {% block menu %}{{ knp_menu_render('particle', {'currentClass': 'active', 'ancestorClass': 'active'}) }}{% endblock %}
                                         </div>
                                         <div class="col-2 d-none d-xxl-block">
                                             <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
-                                                <twig:search />
+                                                {% if search %}<twig:search />{% endif %}
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +102,11 @@
                             <div class="row text-center align-items-center flex-row-reverse">
                                 <div class="col-lg-auto ms-lg-auto">
                                     <ul class="list-inline list-inline-dots mb-0">
-                                        {% block footerLinks %}{% endblock %}
+                                        {% for link in footerLinks %}
+                                            <li class="list-inline-item">
+                                                <a href="{{ link.url }}" target="{{ link.target }}" class="link-secondary" rel="noopener">{{ link.label }}</a>
+                                            </li>
+                                        {% endfor %}
                                     </ul>
                                 </div>
                                 <div class="col-12 col-lg-auto mt-3 mt-lg-0">
@@ -87,7 +114,7 @@
                                         {% block footerCopyright %}
                                             <li class="list-inline-item">
                                                 Copyright &copy; {{ 'now'|date('Y') }}
-                                                <a href="." class="link-secondary">Particle</a>.
+                                                <a href="." class="link-secondary">{{ projectName }}</a>.
                                                 All rights reserved.
                                             </li>
                                         {% endblock %}

@@ -13,11 +13,7 @@ declare(strict_types=1);
 
 namespace Qsomazzi\Particle\Routing;
 
-use Qsomazzi\Particle\Action\AddAction;
-use Qsomazzi\Particle\Action\EditAction;
-use Qsomazzi\Particle\Action\ListAction;
-use Qsomazzi\Particle\Action\RemoveAction;
-use Qsomazzi\Particle\Action\ShowAction;
+use Qsomazzi\Particle\Metadata\OperationInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
@@ -31,7 +27,8 @@ final class AdminRouteLoader extends Loader
 
     public function __construct(
         #[TaggedIterator('app.admin')] private readonly iterable $admins,
-        private readonly string $routesPrefix,
+        private readonly string $qsomazziParticlePrefix,
+        private readonly array $qsomazziParticleHomepage,
         ?string $env = null,
     ) {
         parent::__construct($env);
@@ -40,50 +37,28 @@ final class AdminRouteLoader extends Loader
     public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         if ($this->isLoaded) {
-            throw new \RuntimeException('Do not add the "admin" loader twice');
+            throw new \RuntimeException('Do not add the "particle" loader twice');
         }
 
-        $routes  = new RouteCollection();
+        $routes = new RouteCollection();
+
+        // Add the homepage route
+        $route = new Route($this->qsomazziParticlePrefix.'/', [
+            '_controller' => $this->qsomazziParticleHomepage['controller'],
+        ], [], [], '', [], ['GET']);
+        $routes->add($this->qsomazziParticleHomepage['route'], $route);
+
+        // Add the routes for each admin
         foreach ($this->admins as $admin) {
-            $identifierNames = explode('\\', $admin->getEntityClass());
-            $identifier      = strtolower(end($identifierNames));
-            $domain          = is_null($admin->getDomain()) ? '' : strtolower($admin->getDomain()).'/';
-
-            // Create a dynamic routes for each entity
-            $route = new Route(sprintf('%s/%s%s', $this->routesPrefix, $domain, $identifier), [
-                '_controller' => ListAction::class,
-                'admin'       => $admin::class,
-                'identifier'  => $identifier,
-            ], [], [], '', [], ['GET', 'POST']);
-            $routes->add(sprintf('admin_%s', $identifier), $route);
-
-            $route = new Route(sprintf('%s/%s%s/new', $this->routesPrefix, $domain, $identifier), [
-                '_controller' => AddAction::class,
-                'admin'       => $admin::class,
-                'identifier'  => $identifier,
-            ], [], [], '', [], ['GET', 'POST']);
-            $routes->add(sprintf('admin_%s_new', $identifier), $route);
-
-            $route = new Route(sprintf('%s/%s%s/{id}', $this->routesPrefix, $domain, $identifier), [
-                '_controller' => ShowAction::class,
-                'admin'       => $admin::class,
-                'identifier'  => $identifier,
-            ], [], [], '', [], ['GET']);
-            $routes->add(sprintf('admin_%s_show', $identifier), $route);
-
-            $route = new Route(sprintf('%s/%s%s/{id}/edit', $this->routesPrefix, $domain, $identifier), [
-                '_controller' => EditAction::class,
-                'admin'       => $admin::class,
-                'identifier'  => $identifier,
-            ], [], [], '', [], ['GET', 'POST']);
-            $routes->add(sprintf('admin_%s_edit', $identifier), $route);
-
-            $route = new Route(sprintf('%s/%s%s/{id}', $this->routesPrefix, $domain, $identifier), [
-                '_controller' => RemoveAction::class,
-                'admin'       => $admin::class,
-                'identifier'  => $identifier,
-            ], [], [], '', [], ['POST']);
-            $routes->add(sprintf('admin_%s_delete', $identifier), $route);
+            foreach ($admin->getMetadata()->getOperations() as $operation) {
+                if ($operation instanceof OperationInterface) {
+                    $route = new Route($this->qsomazziParticlePrefix.$operation->getPath(), [
+                        '_controller' => $operation->getController(),
+                        'admin'       => $admin::class,
+                    ], [], [], '', [], $operation->getMethods());
+                    $routes->add($operation->getName(), $route);
+                }
+            }
         }
 
         $this->isLoaded = true;
