@@ -68,6 +68,18 @@ abstract class AbstractAdmin
             }
         }
 
+        if (!is_null($payload->filters)) {
+            $filters = $payload->filters;
+            foreach ($filters as $filter => $value) {
+                if ($value !== null && $value !== '') {
+                    $qb
+                        ->andWhere(sprintf('e.%1$s LIKE :%1$s', $filter))
+                        ->setParameter($filter, '%'.$value.'%')
+                    ;
+                }
+            }
+        }
+
         list($sort, $sortDirection) = $this->getSort($payload);
         $qb->orderBy('e.'.$sort, $sortDirection);
 

@@ -29,6 +29,7 @@ final class DateTime implements FieldInterface
             ->setKey($key)
             ->setLabel($label)
             ->setSortable(true)
+            ->setFilterable(true)
         ;
     }
 

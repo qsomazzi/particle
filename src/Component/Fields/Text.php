@@ -27,6 +27,7 @@ final class Text implements FieldInterface
             ->setKey($key)
             ->setLabel($label)
             ->setSortable(true)
+            ->setFilterable(true)
         ;
     }
 }

@@ -47,5 +47,10 @@ class AdminPass implements CompilerPassInterface
             $container->getDefinition('pagerfanta.view.twig')
                 ->replaceArgument(1, $container->getParameter(QsomazziParticleBundle::PARAMETER_TEMPLATES)['pagination']);
         }
+
+        # Override Knplabs/KnpMenuBundle config to allow the user to change the template from particle config
+        if (isset($bundles['TwigBundle']) && isset($bundles['KnpMenuBundle'])) {
+            $container->setParameter('knp_menu.renderer.twig.template', $container->getParameter(QsomazziParticleBundle::PARAMETER_TEMPLATES)['menu']);
+        }
     }
 }

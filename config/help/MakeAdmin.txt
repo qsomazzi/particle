@@ -1,0 +1,25 @@
+The <info>%command.name%</info> command generates a new admin class.
+
+<info>php %command.full_name% UserAdmin</info>
+
+If the argument is missing, the command will ask for the admin class interactively.
+
+You can optionally specify the entity class in a second argument.
+This can be the name of an entity like <info>User</info>
+
+<info>php %command.full_name% UserAdmin User</info>
+
+You can also specify a fully qualified name to another class like <info>\App\Dto\UserData</info>.
+Slashes must be escaped in the argument.
+
+<info>php %command.full_name% UserAdmin \\App\\Dto\\UserData</info>
+
+You can optionally specify the form class in a third argument.
+This can be the name of a form like <info>UserType</info>
+
+<info>php %command.full_name% UserAdmin User UserType</info>
+
+You can also specify a fully qualified name to the form class like <info>\App\Form\UserType</info>.
+Slashes must be escaped in the argument.
+
+<info>php %command.full_name% UserAdmin User \\App\\Form\\UserType</info>

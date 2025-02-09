@@ -27,6 +27,7 @@ final class Boolean implements FieldInterface
             ->setKey($key)
             ->setLabel($label)
             ->setSortable(true)
+            ->setFilterable(true)
         ;
     }
 }

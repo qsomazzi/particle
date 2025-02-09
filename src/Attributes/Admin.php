@@ -17,8 +17,8 @@ namespace Qsomazzi\Particle\Attributes;
 final readonly class Admin
 {
     public function __construct(
-        private string $formClass,
         private string $entityClass,
+        private string $formClass,
         private string $identifier = 'id',
         private string $prefix = '',
         private int $maxPerPage = 10,
@@ -33,14 +33,14 @@ final readonly class Admin
     ) {
     }
 
-    public function getFormClass(): string
-    {
-        return $this->formClass;
-    }
-
     public function getEntityClass(): string
     {
         return $this->entityClass;
+    }
+
+    public function getFormClass(): string
+    {
+        return $this->formClass;
     }
 
     public function getIdentifier(): string

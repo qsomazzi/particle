@@ -27,6 +27,7 @@ final class Collection implements FieldInterface
             ->setKey($key)
             ->setLabel($label)
             ->setSortable(false)
+            ->setFilterable(false)
         ;
     }
 }

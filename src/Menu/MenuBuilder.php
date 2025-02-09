@@ -40,7 +40,7 @@ final class MenuBuilder
         $request = $this->requestStack->getCurrentRequest();
 
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', 'navbar-nav');
+        $menu->setChildrenAttribute('class', 'navbar-nav pt-lg-3');
 
         $menu->addChild('Home', ['route' => $this->qsomazziParticleHomepage['route']])
             ->setAttribute('class', 'nav-item')
@@ -90,7 +90,6 @@ final class MenuBuilder
                         $adminMenuItem
                             ->addChild($metadata->getPluralLabel(), ['route' => $indexOperation->getName()])
                             ->setAttribute('class', 'dropdown-item')
-                            ->setLinkAttribute('class', 'dropdown-item')
                             ->setDisplay(true)
                         ;
 
@@ -108,7 +107,6 @@ final class MenuBuilder
                             $adminMenuItem
                                 ->addChild($customOperation->getText(), ['route' => $customOperation->getName()])
                                 ->setAttribute('class', 'dropdown-item')
-                                ->setLinkAttribute('class', 'dropdown-item')
                                 ->setDisplay(true)
                             ;
                         }

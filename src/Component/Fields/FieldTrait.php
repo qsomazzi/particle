@@ -17,11 +17,12 @@ use Qsomazzi\Particle\Metadata\Index;
 
 trait FieldTrait
 {
-    private ?string $key    = null;
-    private ?string $label  = null;
-    private mixed $value    = null;
-    private bool $sortable  = true;
-    private string $display = Index::TYPE;
+    private ?string $key     = null;
+    private ?string $label   = null;
+    private mixed $value     = null;
+    private bool $sortable   = true;
+    private bool $filterable = true;
+    private string $display  = Index::TYPE;
 
     public function getKey(): ?string
     {
@@ -74,5 +75,17 @@ trait FieldTrait
     public function isSortable(): bool
     {
         return $this->sortable;
+    }
+
+    public function isFilterable(): bool
+    {
+        return $this->filterable;
+    }
+
+    public function setFilterable(bool $filterable): self
+    {
+        $this->filterable = $filterable;
+
+        return $this;
     }
 }

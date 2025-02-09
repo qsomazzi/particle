@@ -33,31 +33,50 @@
 
 {% block content %}
     <div class="card">
-        <div class="card-body border-bottom py-3">
-            <div class="d-flex">
-                <div class="ms-auto text-secondary">
-                    Search:
-                    <div class="ms-2 d-inline-block">
-                        <form
-                            action="{{ path(admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')).name) }}"
-                            method="GET"
-                            data-controller="auto-submit"
-                            data-auto-submit-delay-value="300"
-                            data-turbo-frame="{{ admin.metadata.shortName }}-list" >
-                            <input
-                                type="search"
-                                class="fuzzy-search form-control form-control-sm"
-                                aria-label="Search"
-                                data-action="auto-submit#submit"
-                                value="{{ app.request.query.get('query') }}"
-                                name="query"
-                                autofocus />
-                        </form>
+        <turbo-frame id="{{ admin.metadata.shortName }}-list" data-turbo-action="advance">
+            <div class="card-body border-bottom py-3">
+                <div class="d-flex">
+                    <a class="btn btn-sm btn-pill position-relative btn-outline-primary" data-bs-toggle="offcanvas" href="#filters" role="button" aria-controls="filters">
+                        <i class="ti ti-filter"></i> Filters
+
+                        {% if filters|length > 0 %}
+                            <span class="badge bg-blue text-blue-fg badge-notification badge-pill">{{ filters|length }}</span>
+                        {% endif %}
+                    </a>
+
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="filters" aria-labelledby="filtersLabel">
+                        <div class="offcanvas-header">
+                            <h2 class="offcanvas-title" id="filtersLabel">Filters</h2>
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <div>{{ form(form) }}</div>
+                        </div>
+                    </div>
+
+                    <div class="ms-auto text-secondary">
+                        Search:
+                        <div class="ms-2 d-inline-block">
+                            <form
+                                    action="{{ path(admin.getOperationByType(constant('Qsomazzi\\Particle\\Metadata\\Index::TYPE')).name) }}"
+                                    method="GET"
+                                    data-controller="auto-submit"
+                                    data-auto-submit-delay-value="300"
+                                    data-turbo-frame="{{ admin.metadata.shortName }}-list" >
+                                <input
+                                        type="search"
+                                        class="fuzzy-search form-control form-control-sm"
+                                        aria-label="Search"
+                                        data-action="auto-submit#submit"
+                                        value="{{ app.request.query.get('query') }}"
+                                        name="query"
+                                        autofocus />
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <turbo-frame id="{{ admin.metadata.shortName }}-list" data-turbo-action="advance">
+
             <div class="table-responsive">
                 <table class="table card-table table-vcenter text-nowrap">
                     <thead>
