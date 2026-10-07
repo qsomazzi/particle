@@ -5,27 +5,31 @@ namespace Qsomazzi\Particle\RequestPayload;
 class IndexPayload
 {
     public function __construct(
-        public int     $page = 1,
-        public ?string $sort = null,
-        public ?string $sortDirection = null,
-        public ?string $query = null,
-        public ?array  $filters = null,
+        public readonly int     $page = 1,
+        public readonly ?string $sort = null,
+        public readonly ?string $sortDirection = null,
+        public readonly ?string $query = null,
+        public ?array  $filters = [],
     ) {
     }
 
-    public function buildFilters():void
+    public function all(): array
     {
-        unset($this->filters['submit']);
-        unset($this->filters['_token']);
+        $params = [];
 
-        if (isset($this->filters['clear'])) {
-            $this->filters = [];
+        if ($this->page !== 1) {
+            $params['page'] = $this->page;
+        }
+        if ($this->sort !== null) {
+            $params['sort'] = $this->sort;
+        }
+        if ($this->sortDirection !== null) {
+            $params['sortDirection'] = $this->sortDirection;
+        }
+        if ($this->query !== null) {
+            $params['query'] = $this->query;
         }
 
-        foreach ($this->filters as $filter => $value) {
-            if ($value === '') {
-                unset($this->filters[$filter]);
-            }
-        }
+        return $params;
     }
 }

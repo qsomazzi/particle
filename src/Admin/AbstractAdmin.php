@@ -51,6 +51,11 @@ abstract class AbstractAdmin
         return $this->metadata;
     }
 
+    public function getDoctrineMetadata(): ClassMetadata
+    {
+        return $this->doctrineMetadata;
+    }
+
     public function getQueryBuilder(EntityManagerInterface $entityManager, IndexPayload $payload): QueryBuilder
     {
         $qb = $entityManager->createQueryBuilder()
@@ -68,17 +73,17 @@ abstract class AbstractAdmin
             }
         }
 
-        if (!is_null($payload->filters)) {
-            $filters = $payload->filters;
-            foreach ($filters as $filter => $value) {
-                if ($value !== null && $value !== '') {
-                    $qb
-                        ->andWhere(sprintf('e.%1$s LIKE :%1$s', $filter))
-                        ->setParameter($filter, '%'.$value.'%')
-                    ;
-                }
-            }
-        }
+//        if (!is_null($payload->filters)) {
+//            $filters = $payload->filters;
+//            foreach ($filters as $filter => $value) {
+//                if ($value !== null && $value !== '') {
+//                    $qb
+//                        ->andWhere(sprintf('e.%1$s LIKE :%1$s', $filter))
+//                        ->setParameter($filter, '%'.$value.'%')
+//                    ;
+//                }
+//            }
+//        }
 
         list($sort, $sortDirection) = $this->getSort($payload);
         $qb->orderBy('e.'.$sort, $sortDirection);

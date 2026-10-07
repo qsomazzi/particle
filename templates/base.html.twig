@@ -5,11 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
         <title>{% block title %}{{ projectName }}{% endblock %}</title>
-        <link rel="icon" type="image/png" href="{{ asset(favicon) }}">
-        {% block stylesheets %}
-        {% endblock %}
-        {% block javascripts %}
-        {% endblock %}
+        <link rel="icon" type="image/png" href="{{ asset(favicon) }}" />
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}{% endblock %}
     </head>
     <body class="layout-fluid">
         <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
